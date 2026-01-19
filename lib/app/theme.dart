@@ -5,67 +5,40 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // ============ COLORI PRINCIPALI ============
-  
   static const Color primary = Color(0xFF2D5F5D);
   static const Color secondary = Color(0xFFF4E8D8);
   static const Color background = Color(0xFFFAFAF8);
-  
+
   /// Surface per card e contenitori
   static const Color surface = Color(0xFFFFFFFF);
 
   // ============ COLORI ACCENTO ============
-  
-  /// CTA e elementi interattivi
-  static const Color accent1 = Color(0xFFE8926F);
-  
-  /// successi e obiettivi raggiunti
-  static const Color accent2 = Color(0xFFA8C5A0);
-  
-  /// elementi secondari
-  static const Color accent3 = Color(0xFF6B8E8E);
+  static const Color accent1 = Color(0xFFE8926F); // CTA
+  static const Color accent2 = Color(0xFFA8C5A0); // success
+  static const Color accent3 = Color(0xFF6B8E8E); // secondary
 
-  // ============ COLORI MACRONUTRIENTI ============
-  
-  /// Carboidrati
+  // ============ MACRO ============
   static const Color carbs = Color(0xFFDEB887);
-  
-  /// Proteine
   static const Color protein = Color(0xFFE8926F);
-  
-  /// Grassi
   static const Color fats = Color(0xFFA8C5A0);
 
-  // ============ COLORI FUNZIONALI ============
-  
-  /// Errori e alert
+  // ============ FUNZIONALI ============
   static const Color error = Color(0xFFC76856);
-  
-  /// Successi
   static const Color success = Color(0xFF7BA375);
-  
-  /// Warning
   static const Color warning = Color(0xFFD4A574);
 
-  // ============ COLORI TESTO ============
-  
-  /// Testo principale
+  // ============ TESTI ============
   static const Color textPrimary = Color(0xFF2C3E3D);
-  
-  /// Testo secondario
-  static const Color textSecondary = Color(0xFF6B8080);
-  
-  /// Testo disabilitato
+  static const Color textSecondary = Color(0xFF5F7676);
   static const Color textDisabled = Color(0xFFB0B8B8);
 
-  // ============ COSTANTI DESIGN ============
-  
-  static const double radiusCard = 24.0;
-  static const double radiusButton = 16.0;
-  static const double radiusSmall = 12.0;
-  static const double paddingStandard = 20.0;
+  // ============ DESIGN ============
+  static const double radiusCard = 24;
+  static const double radiusButton = 16;
+  static const double radiusSmall = 12;
+  static const double paddingStandard = 16;
 
-  // ============ THEME DATA ============
-  
+  // ============ THEME ============
   static ThemeData get light {
     final colorScheme = ColorScheme(
       brightness: Brightness.light,
@@ -85,128 +58,107 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
-      
-      // Typography con Google Fonts
+
+      // ================= TEXT THEME =================
       textTheme: TextTheme(
-        // Display - Per titoli molto grandi (serif morbido)
+        // Greeting / Nome utente (UNICO uso Crimson)
         displayLarge: GoogleFonts.crimsonPro(
-          fontSize: 57,
-          fontWeight: FontWeight.w600,
-          height: 1.1,
-          letterSpacing: -0.5,
-          color: textPrimary,
-        ),
-        displayMedium: GoogleFonts.crimsonPro(
-          fontSize: 45,
-          fontWeight: FontWeight.w600,
-          height: 1.15,
-          color: textPrimary,
-        ),
-        displaySmall: GoogleFonts.crimsonPro(
           fontSize: 36,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
+          height: 1.15,
+          letterSpacing: -0.2,
+          color: textPrimary,
+        ),
+
+        displayMedium: GoogleFonts.crimsonPro(
+          fontSize: 32,
+          fontWeight: FontWeight.w700,
           height: 1.2,
           color: textPrimary,
         ),
-        
-        // Headline - Per titoli sezioni (serif)
-        headlineLarge: GoogleFonts.crimsonPro(
-          fontSize: 32,
-          fontWeight: FontWeight.w600,
-          height: 1.25,
-          color: textPrimary,
-        ),
-        headlineMedium: GoogleFonts.crimsonPro(
-          fontSize: 28,
-          fontWeight: FontWeight.w600,
-          height: 1.3,
-          color: textPrimary,
-        ),
-        headlineSmall: GoogleFonts.crimsonPro(
-          fontSize: 24,
-          fontWeight: FontWeight.w500,
-          height: 1.3,
-          color: textPrimary,
-        ),
-        
-        // Title - Per titoli card (sans-serif geometrico)
-        titleLarge: GoogleFonts.poppins(
+
+        // Section titles
+        headlineLarge: GoogleFonts.poppins(
           fontSize: 22,
           fontWeight: FontWeight.w600,
           height: 1.3,
           color: textPrimary,
         ),
+        headlineMedium: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+          color: textPrimary,
+        ),
+        headlineSmall: GoogleFonts.poppins(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+          color: textPrimary,
+        ),
+
+        // Card titles
+        titleLarge: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+        ),
         titleMedium: GoogleFonts.poppins(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          height: 1.4,
-          letterSpacing: 0.15,
-          color: textPrimary,
         ),
         titleSmall: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          height: 1.4,
-          letterSpacing: 0.1,
-          color: textPrimary,
         ),
-        
-        // Body - Per testi normali (serif)
-        bodyLarge: GoogleFonts.crimsonPro(
+
+        // Body
+        bodyLarge: GoogleFonts.poppins(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           height: 1.5,
-          letterSpacing: 0.5,
           color: textPrimary,
         ),
-        bodyMedium: GoogleFonts.crimsonPro(
+        bodyMedium: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w400,
           height: 1.5,
-          letterSpacing: 0.25,
           color: textPrimary,
         ),
-        bodySmall: GoogleFonts.crimsonPro(
+        bodySmall: GoogleFonts.poppins(
           fontSize: 12,
           fontWeight: FontWeight.w400,
           height: 1.4,
-          letterSpacing: 0.4,
           color: textSecondary,
         ),
-        
-        // Label - Per etichette e bottoni (sans-serif)
+
+        // Labels / Buttons
         labelLarge: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          height: 1.4,
-          letterSpacing: 0.1,
-          color: textPrimary,
+          letterSpacing: 0.2,
         ),
         labelMedium: GoogleFonts.poppins(
           fontSize: 12,
-          fontWeight: FontWeight.w600,
-          height: 1.3,
-          letterSpacing: 0.5,
-          color: textPrimary,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.3,
         ),
         labelSmall: GoogleFonts.poppins(
           fontSize: 11,
           fontWeight: FontWeight.w500,
-          height: 1.3,
-          letterSpacing: 0.5,
+          letterSpacing: 0.3,
           color: textSecondary,
         ),
       ),
-      
-      // AppBar
+
+      // ================= APP BAR =================
       appBarTheme: AppBarTheme(
         elevation: 0,
-        centerTitle: false,
         backgroundColor: background,
         foregroundColor: textPrimary,
-        titleTextStyle: GoogleFonts.crimsonPro(
-          fontSize: 24,
-          fontWeight: FontWeight.w500,
+        titleTextStyle: GoogleFonts.poppins(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
         iconTheme: const IconThemeData(
@@ -214,94 +166,81 @@ class AppTheme {
           size: 24,
         ),
       ),
-      
-      // Card
+
+      // ================= CARD =================
       cardTheme: CardThemeData(
-        elevation: 0,
         color: surface,
-        shadowColor: primary.withOpacity(0.08),
+        elevation: 0,
+        margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
           side: BorderSide(
-            color: primary.withOpacity(0.1),
+            color: primary.withOpacity(0.06),
             width: 1,
           ),
         ),
       ),
-      
-      // Elevated Button
+
+      // ================= BUTTON =================
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primary,
+          backgroundColor: accent1,
           foregroundColor: Colors.white,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          minimumSize: const Size(48, 56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radiusButton),
           ),
           textStyle: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
           ),
         ),
       ),
-      
-      // Input Decoration
+
+      // ================= INPUT =================
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusButton),
           borderSide: BorderSide(
-            color: primary.withOpacity(0.2),
-            width: 1,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radiusButton),
-          borderSide: BorderSide(
-            color: primary.withOpacity(0.2),
-            width: 1,
+            color: primary.withOpacity(0.15),
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusButton),
-          borderSide: const BorderSide(
-            color: primary,
-            width: 2,
-          ),
+          borderSide: const BorderSide(color: primary, width: 2),
         ),
       ),
-      
-      // Bottom Navigation Bar
+
+      // ================= BOTTOM NAV =================
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: surface,
         selectedItemColor: primary,
         unselectedItemColor: textSecondary,
         selectedLabelStyle: GoogleFonts.poppins(
           fontSize: 11,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
         unselectedLabelStyle: GoogleFonts.poppins(
           fontSize: 11,
           fontWeight: FontWeight.w400,
         ),
         type: BottomNavigationBarType.fixed,
-        elevation: 8,
+        elevation: 6,
       ),
     );
   }
 
-  // ============ HELPER UTILITIES ============
-  
-  /// Ombra soft per card
+  // ================= SHADOW =================
   static List<BoxShadow> get cardShadow => [
-    BoxShadow(
-      color: primary.withOpacity(0.08),
-      blurRadius: 20,
-      offset: const Offset(0, 4),
-    ),
-  ];
+        BoxShadow(
+          color: primary.withOpacity(0.06),
+          blurRadius: 18,
+          offset: const Offset(0, 6),
+        ),
+      ];
 }

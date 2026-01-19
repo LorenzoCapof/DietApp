@@ -1,7 +1,6 @@
 // lib/features/home/screens/home_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../app/theme.dart';
@@ -66,13 +65,11 @@ class HomeScreen extends StatelessWidget {
                       
                       // Section Title
                       Text(
-                        'REGISTRO ALIMENTARE',
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.2,
-                          color: AppTheme.textSecondary,
-                        ),
+                        'DIARIO ALIMENTARE',
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(letterSpacing: 1.2),
                       ),
                       
                       const SizedBox(height: 12),
@@ -113,12 +110,10 @@ class HomeScreen extends StatelessWidget {
                       // Tracking Section
                       Text(
                         'TRACKING GIORNALIERO',
-                        style: GoogleFonts.poppins(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.2,
-                          color: AppTheme.textSecondary,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(letterSpacing: 1.2),
                       ),
                       
                       const SizedBox(height: 12),
@@ -162,19 +157,15 @@ class HomeScreen extends StatelessWidget {
         children: [
           Text(
             '$greeting,',
-            style: GoogleFonts.crimsonPro(
-              fontSize: 16,
-              color: AppTheme.textSecondary,
-            ),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 4),
           Text(
             userName,
-            style: GoogleFonts.crimsonPro(
-              fontSize: 32,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
-            ),
+            style: Theme.of(context).textTheme.displayLarge,
           ),
         ],
       ),
@@ -211,12 +202,13 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   displayDate,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                    color: AppTheme.primary,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(
+                        color: AppTheme.primary,
+                        letterSpacing: 0.5,
+                      ),
                 ),
               ],
             ),
