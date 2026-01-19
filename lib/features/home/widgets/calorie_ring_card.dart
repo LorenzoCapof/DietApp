@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 import '../../../app/theme.dart';
 
@@ -17,11 +16,11 @@ class CalorieRingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final remaining = goal - consumed;
+    final remaining = (goal - consumed).clamp(0, goal);
     final progress = (consumed / goal).clamp(0.0, 1.0);
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppTheme.cardPadding),
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -29,57 +28,55 @@ class CalorieRingCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Ring Progress
+          // Ring Progress - dimensioni ridotte
           SizedBox(
-            height: 200,
-            width: 200,
+            height: AppTheme.ringDiameter,
+            width: AppTheme.ringDiameter,
             child: Stack(
               alignment: Alignment.center,
               children: [
                 // Background Circle
                 CustomPaint(
-                  size: const Size(200, 200),
+                  size: const Size(AppTheme.ringDiameter, AppTheme.ringDiameter),
                   painter: CircleProgressPainter(
                     progress: 1.0,
-                    color: AppTheme.primary.withOpacity(0.1),
-                    strokeWidth: 16,
+                    color: AppTheme.accent3.withOpacity(0.12),
+                    strokeWidth: AppTheme.ringStrokeWidth,
                   ),
                 ),
-                // Progress Circle
-                CustomPaint(
-                  size: const Size(200, 200),
-                  painter: CircleProgressPainter(
-                    progress: progress,
-                    color: AppTheme.primary,
-                    strokeWidth: 16,
-                  ),
+                // Progress Circle - animato
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: progress),
+                  duration: const Duration(milliseconds: 700),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, child) {
+                    return CustomPaint(
+                      size: const Size(AppTheme.ringDiameter, AppTheme.ringDiameter),
+                      painter: CircleProgressPainter(
+                        progress: value,
+                        color: AppTheme.accent3,
+                        strokeWidth: AppTheme.ringStrokeWidth,
+                      ),
+                    );
+                  },
                 ),
                 // Center Content
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Rimanenti',
-                      style: GoogleFonts.crimsonPro(
-                        fontSize: 14,
-                        color: AppTheme.textSecondary,
-                      ),
+                      'Calorie rimanenti',
+                      style: AppTheme.ringLabelStyle,
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       remaining.toInt().toString(),
-                      style: GoogleFonts.poppins(
-                        fontSize: 48,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.primary,
-                        height: 1.1,
-                      ),
+                      style: AppTheme.ringNumberStyle,
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       'Obiettivo ${goal.toInt()} kcal',
-                      style: GoogleFonts.crimsonPro(
-                        fontSize: 12,
-                        color: AppTheme.textSecondary,
-                      ),
+                      style: AppTheme.ringLabelStyle,
                     ),
                   ],
                 ),
@@ -87,23 +84,23 @@ class CalorieRingCard extends StatelessWidget {
             ),
           ),
           
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           
-          // Stats Row
+          // Stats Row - più compatta
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _StatItem(
-                label: 'Assunte',
+                label: 'Assunte (kcal)',
                 value: consumed.toInt(),
               ),
               Container(
-                height: 40,
+                height: 32,
                 width: 1,
-                color: AppTheme.primary.withOpacity(0.2),
+                color: AppTheme.primary.withOpacity(0.15),
               ),
               _StatItem(
-                label: 'Bruciate',
+                label: 'Bruciate (kcal)',
                 value: burned.toInt(),
               ),
             ],
@@ -129,19 +126,12 @@ class _StatItem extends StatelessWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.crimsonPro(
-            fontSize: 12,
-            color: AppTheme.textSecondary,
-          ),
+          style: AppTheme.ringStatsLabelStyle,
         ),
         const SizedBox(height: 4),
         Text(
           value.toString(),
-          style: GoogleFonts.poppins(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
-          ),
+          style: AppTheme.ringStatsValueStyle,
         ),
       ],
     );

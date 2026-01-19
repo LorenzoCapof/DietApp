@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
                         burned: 0,
                       ),
                       
-                      const SizedBox(height: 20),
+                      const SizedBox(height: AppTheme.sectionGap),
                       
                       // Macro Pills
                       MacroPillsCard(
@@ -66,10 +66,10 @@ class HomeScreen extends StatelessWidget {
                       // Section Title
                       Text(
                         'DIARIO ALIMENTARE',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall
-                            ?.copyWith(letterSpacing: 1.2),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          letterSpacing: 1.2,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       
                       const SizedBox(height: 12),
@@ -110,10 +110,10 @@ class HomeScreen extends StatelessWidget {
                       // Tracking Section
                       Text(
                         'TRACKING GIORNALIERO',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall
-                            ?.copyWith(letterSpacing: 1.2),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          letterSpacing: 1.2,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       
                       const SizedBox(height: 12),
@@ -129,12 +129,21 @@ class HomeScreen extends StatelessWidget {
                       
                       const SizedBox(height: 20),
                       
-                      // Debug Button (rimuovi in produzione)
+                      // Debug Button
                       if (provider.currentLog?.meals.isEmpty ?? true)
-                        TextButton(
-                          onPressed: () => provider.loadSampleData(),
-                          child: const Text('Carica dati di esempio'),
+                        Center(
+                          child: TextButton(
+                            onPressed: () => provider.loadSampleData(),
+                            child: Text(
+                              'Carica dati di esempio',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: AppTheme.primary,
+                              ),
+                            ),
+                          ),
                         ),
+                      
+                      const SizedBox(height: 40),
                     ]),
                   ),
                 ),
@@ -151,18 +160,22 @@ class HomeScreen extends StatelessWidget {
     final greeting = _getGreeting();
 
     return Padding(
-      padding: const EdgeInsets.all(AppTheme.paddingStandard),
+      padding: const EdgeInsets.fromLTRB(
+        AppTheme.paddingStandard,
+        20, // Top padding ridotto
+        AppTheme.paddingStandard,
+        0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Greeting - Poppins 400, 14sp
           Text(
             '$greeting,',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: AppTheme.textSecondary),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 4),
+          // Nome - Crimson Pro 700, 36sp
           Text(
             userName,
             style: Theme.of(context).textTheme.displayLarge,
@@ -178,46 +191,70 @@ class HomeScreen extends StatelessWidget {
     final dateFormat = DateFormat('d MMMM', 'it_IT');
     final displayDate = isToday ? 'OGGI' : dateFormat.format(selectedDate).toUpperCase();
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton(
-            onPressed: () => provider.goToPreviousDay(),
-            icon: const Icon(Icons.chevron_left),
-            color: AppTheme.primary,
-          ),
-          const SizedBox(width: 20),
-          GestureDetector(
-            onTap: () => provider.goToToday(),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.calendar_today,
-                  size: 16,
-                  color: AppTheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  displayDate,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(
-                        color: AppTheme.primary,
-                        letterSpacing: 0.5,
-                      ),
-                ),
-              ],
+          // Pulsante precedente - hit target 44x44
+          SizedBox(
+            width: 44,
+            height: 44,
+            child: IconButton(
+              onPressed: () => provider.goToPreviousDay(),
+              icon: const Icon(Icons.chevron_left),
+              color: AppTheme.primary,
+              iconSize: 24,
+              padding: EdgeInsets.zero,
             ),
           ),
-          const SizedBox(width: 20),
-          IconButton(
-            onPressed: _isToday(selectedDate) ? null : () => provider.goToNextDay(),
-            icon: const Icon(Icons.chevron_right),
-            color: _isToday(selectedDate) ? AppTheme.textDisabled : AppTheme.primary,
+          
+          const SizedBox(width: 12),
+          
+          // Data corrente
+          GestureDetector(
+            onTap: () => provider.goToToday(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppTheme.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 14,
+                    color: AppTheme.primary,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    displayDate,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppTheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          
+          const SizedBox(width: 12),
+          
+          // Pulsante successivo - hit target 44x44
+          SizedBox(
+            width: 44,
+            height: 44,
+            child: IconButton(
+              onPressed: _isToday(selectedDate) ? null : () => provider.goToNextDay(),
+              icon: const Icon(Icons.chevron_right),
+              color: _isToday(selectedDate) ? AppTheme.textDisabled : AppTheme.primary,
+              iconSize: 24,
+              padding: EdgeInsets.zero,
+              disabledColor: AppTheme.textDisabled,
+            ),
           ),
         ],
       ),
@@ -239,11 +276,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _showAddMealDialog(BuildContext context, NutritionProvider provider, MealType type) {
-    // Placeholder per future implementazioni
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Aggiungi ${type.displayName} - Coming soon!'),
         duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

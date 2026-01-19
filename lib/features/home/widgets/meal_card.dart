@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/theme.dart';
 import '../../../core/models/meal.dart';
@@ -22,11 +21,10 @@ class MealCard extends StatelessWidget {
       0,
       (sum, meal) => sum + meal.totalNutrition.calories,
     );
-
     final hasItems = meals.isNotEmpty;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppTheme.paddingStandard),
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -48,29 +46,28 @@ class MealCard extends StatelessWidget {
                   children: [
                     Text(
                       type.displayName,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     if (hasItems)
                       Text(
-                        'Consigliato ${_getRecommendedCalories(type)} - ${totalCalories.toInt()} kcal',
-                        style: GoogleFonts.crimsonPro(
-                          fontSize: 12,
-                          color: AppTheme.textSecondary,
-                        ),
+                        '${_getRecommendedCalories(type)} · ${totalCalories.toInt()} kcal',
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: onAdd,
-                icon: Icon(
-                  hasItems ? Icons.add_circle : Icons.add_circle_outline,
-                  color: AppTheme.primary,
-                  size: 28,
+              // Pulsante + con hit target 44x44
+              SizedBox(
+                width: 44,
+                height: 44,
+                child: IconButton(
+                  onPressed: onAdd,
+                  icon: Icon(
+                    hasItems ? Icons.add_circle : Icons.add_circle_outline,
+                    color: AppTheme.primary,
+                    size: 26,
+                  ),
+                  padding: EdgeInsets.zero,
                 ),
               ),
             ],
@@ -85,14 +82,11 @@ class MealCard extends StatelessWidget {
                     meal.items.first.imageUrl ?? '🍽️',
                     style: const TextStyle(fontSize: 20),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       meal.items.first.name,
-                      style: GoogleFonts.crimsonPro(
-                        fontSize: 14,
-                        color: AppTheme.textPrimary,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
                 ],
@@ -107,13 +101,13 @@ class MealCard extends StatelessWidget {
   String _getRecommendedCalories(MealType type) {
     switch (type) {
       case MealType.breakfast:
-        return '370-555 kcal';
+        return 'Consigliato 370-555 kcal';
       case MealType.lunch:
-        return '555-740 kcal';
+        return 'Consigliato 555-740 kcal';
       case MealType.dinner:
-        return '555-740 kcal';
+        return 'Consigliato 555-740 kcal';
       case MealType.snack:
-        return '185-280 kcal';
+        return 'Consigliato 185-280 kcal';
     }
   }
 }

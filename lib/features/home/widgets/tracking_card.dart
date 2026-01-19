@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/theme.dart';
 
@@ -24,7 +23,7 @@ class TrackingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppTheme.cardPadding),
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
@@ -35,11 +34,7 @@ class TrackingCard extends StatelessWidget {
         children: [
           Text(
             'Tracking Giornaliero',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
-            ),
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           _TrackingItem(
@@ -50,7 +45,7 @@ class TrackingCard extends StatelessWidget {
             unit: 'bicchieri',
             onIncrement: onWaterIncrement,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           _TrackingItem(
             icon: '🍎',
             label: 'Frutta',
@@ -59,7 +54,7 @@ class TrackingCard extends StatelessWidget {
             unit: 'porzioni',
             onIncrement: onFruitIncrement,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           _TrackingItem(
             icon: '🥦',
             label: 'Verdura',
@@ -103,27 +98,26 @@ class _TrackingItem extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: AppTheme.textPrimary,
-                ),
+                style: Theme.of(context).textTheme.titleSmall,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 '$count/$goal $unit',
-                style: GoogleFonts.crimsonPro(
-                  fontSize: 12,
-                  color: AppTheme.textSecondary,
-                ),
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),
         ),
-        IconButton(
-          onPressed: onIncrement,
-          icon: const Icon(Icons.add_circle, color: AppTheme.accent2),
-          iconSize: 28,
+        // Hit target 44x44
+        SizedBox(
+          width: 44,
+          height: 44,
+          child: IconButton(
+            onPressed: onIncrement,
+            icon: const Icon(Icons.add_circle, color: AppTheme.accent2),
+            iconSize: 28,
+            padding: EdgeInsets.zero,
+          ),
         ),
       ],
     );

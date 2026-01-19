@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/theme.dart';
 
@@ -28,6 +27,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Carboidrati',
+            icon: '🌾',
             value: carbs,
             goal: carbsGoal,
             color: AppTheme.carbs,
@@ -37,6 +37,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Proteine',
+            icon: '🥩',
             value: protein,
             goal: proteinGoal,
             color: AppTheme.protein,
@@ -46,6 +47,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Grassi',
+            icon: '🥑',
             value: fats,
             goal: fatsGoal,
             color: AppTheme.fats,
@@ -58,12 +60,14 @@ class MacroPillsCard extends StatelessWidget {
 
 class _MacroPill extends StatelessWidget {
   final String label;
+  final String icon;
   final double value;
   final double goal;
   final Color color;
 
   const _MacroPill({
     required this.label,
+    required this.icon,
     required this.value,
     required this.goal,
     required this.color,
@@ -72,9 +76,10 @@ class _MacroPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = (value / goal).clamp(0.0, 1.0);
+    final percentage = (progress * 100).toInt();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(16),
@@ -83,31 +88,40 @@ class _MacroPill extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textSecondary,
-            ),
+          Row(
+            children: [
+              Text(icon, style: const TextStyle(fontSize: 16)),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Text(
-            '${value.toInt()}/${goal.toInt()}g',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.textPrimary,
-            ),
+            '${value.toInt()}g · $percentage%',
+            style: Theme.of(context).textTheme.labelLarge,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: progress,
-              backgroundColor: color.withOpacity(0.2),
-              valueColor: AlwaysStoppedAnimation(color),
-              minHeight: 6,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: progress),
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, child) {
+                return LinearProgressIndicator(
+                  value: value,
+                  backgroundColor: color.withOpacity(0.15),
+                  valueColor: AlwaysStoppedAnimation(color),
+                  minHeight: 7,
+                );
+              },
             ),
           ),
         ],
