@@ -80,7 +80,7 @@ State management con Provider pattern:
 Organizzazione per feature (ogni feature ha screens + widgets):
 - **home/**: Dashboard principale
 - **pantry/**: Gestione dispensa
-- **recipes/**: Ricette AI
+- **recipes/**: Ricette
 - **insights/**: Analytics
 - **profile/**: Profilo utente
 

@@ -34,15 +34,15 @@ class NutritionProvider with ChangeNotifier {
 
   // Macros
   double get consumedProtein => _currentLog?.totalNutrition.protein ?? 0;
-  double get proteinGoal => _currentUser?.macroGoals.protein ?? 100;
+  double get proteinGoal => _currentUser?.macroGoals.protein.toDouble() ?? 100;
   double get proteinProgress => proteinGoal > 0 ? consumedProtein / proteinGoal : 0;
 
   double get consumedCarbs => _currentLog?.totalNutrition.carbs ?? 0;
-  double get carbsGoal => _currentUser?.macroGoals.carbs ?? 250;
+  double get carbsGoal => _currentUser?.macroGoals.carbs.toDouble() ?? 250;
   double get carbsProgress => carbsGoal > 0 ? consumedCarbs / carbsGoal : 0;
 
   double get consumedFats => _currentLog?.totalNutrition.fats ?? 0;
-  double get fatsGoal => _currentUser?.macroGoals.fats ?? 70;
+  double get fatsGoal => _currentUser?.macroGoals.fats.toDouble() ?? 70;
   double get fatsProgress => fatsGoal > 0 ? consumedFats / fatsGoal : 0;
 
   // Tracking
@@ -62,19 +62,34 @@ class NutritionProvider with ChangeNotifier {
 
   // ============ INITIALIZATION ============
 
+  /// Inizializza il provider caricando l'utente (ora senza creare default)
   Future<void> _initialize() async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _currentUser = await _service.getOrCreateUser();
-      await _loadDailyLog(_selectedDate);
+      // Carica l'utente (null se non esiste - onboarding non completato)
+      _currentUser = await _service.getUser();
+      
+      // Carica il daily log solo se c'è un utente
+      if (_currentUser != null) {
+        await _loadDailyLog(_selectedDate);
+      }
     } catch (e) {
       debugPrint('Error initializing: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Ricarica l'utente dopo onboarding completato
+  Future<void> reloadUser() async {
+    _currentUser = await _service.getUser();
+    if (_currentUser != null) {
+      await _loadDailyLog(_selectedDate);
+    }
+    notifyListeners();
   }
 
   // ============ DATE NAVIGATION ============
