@@ -47,7 +47,6 @@ class AppShell extends StatelessWidget {
                     context: context,
                     index: 0,
                     icon: Icons.home_rounded,
-                    label: 'Home',
                     route: '/home',
                     isSelected: currentIndex == 0,
                   ),
@@ -55,7 +54,6 @@ class AppShell extends StatelessWidget {
                     context: context,
                     index: 1,
                     icon: Icons.kitchen_rounded,
-                    label: 'Dispensa',
                     route: '/pantry',
                     isSelected: currentIndex == 1,
                   ),
@@ -63,7 +61,6 @@ class AppShell extends StatelessWidget {
                     context: context,
                     index: 2,
                     icon: Icons.auto_awesome_rounded,
-                    label: 'Ricette',
                     route: '/recipes',
                     isSelected: currentIndex == 2,
                   ),
@@ -71,7 +68,6 @@ class AppShell extends StatelessWidget {
                     context: context,
                     index: 3,
                     icon: Icons.insights_rounded,
-                    label: 'Insights',
                     route: '/insights',
                     isSelected: currentIndex == 3,
                   ),
@@ -79,7 +75,6 @@ class AppShell extends StatelessWidget {
                     context: context,
                     index: 4,
                     icon: Icons.person_rounded,
-                    label: 'Profilo',
                     route: '/profile',
                     isSelected: currentIndex == 4,
                   ),
@@ -96,7 +91,6 @@ class AppShell extends StatelessWidget {
     required BuildContext context,
     required int index,
     required IconData icon,
-    required String label,
     required String route,
     required bool isSelected,
   }) {
@@ -110,7 +104,7 @@ class AppShell extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppTheme.primary.withOpacity(0.1)
+                ? AppTheme.primary.withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
@@ -120,27 +114,12 @@ class AppShell extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: 22,
+                size: 32,
                 color: isSelected
                     ? AppTheme.primary
                     : AppTheme.textSecondary,
               ),
-              const SizedBox(height: 2),
-              Flexible(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                    color: isSelected
-                        ? AppTheme.primary
-                        : AppTheme.textSecondary,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              const SizedBox(height: 2)
             ],
           ),
         ),

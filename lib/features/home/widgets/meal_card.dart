@@ -35,10 +35,8 @@ class MealCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                type.emoji,
-                style: const TextStyle(fontSize: 24),
-              ),
+              type.icon,
+              
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

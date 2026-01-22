@@ -1,3 +1,3 @@
 # dietapp
 
-A new Flutter project.
+Set Icone: https://icons8.com/icons/set/food--style-plasticine 

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import 'package:dietapp/core/models/food_item.dart';
 import 'package:dietapp/core/models/nutrition.dart';
 
@@ -20,16 +22,16 @@ enum MealType {
     }
   }
 
-  String get emoji {
+   Image get icon {
     switch (this) {
       case MealType.breakfast:
-        return '🌅';
+        return Image.asset('../assets/icons/meals/breakfast.png',width: 32,height: 32);
       case MealType.lunch:
-        return '☀️';
+        return Image.asset('../assets/icons/meals/lunch.png',width: 32,height: 32);
       case MealType.dinner:
-        return '🌙';
+        return Image.asset('../assets/icons/meals/dinner.png',width: 32,height: 32);
       case MealType.snack:
-        return '🍎';
+        return Image.asset('../assets/icons/meals/snack.png',width: 32,height: 32);
     }
   }
 }

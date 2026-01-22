@@ -89,7 +89,6 @@ class _NameScreenState extends State<NameScreen> {
                   textCapitalization: TextCapitalization.words,
                   decoration: const InputDecoration(
                     labelText: 'Nome',
-                    hintText: 'Es. Marco',
                     prefixIcon: Icon(Icons.person_outline),
                   ),
                   validator: (value) {

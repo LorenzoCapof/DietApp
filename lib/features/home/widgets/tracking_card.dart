@@ -38,7 +38,7 @@ class TrackingCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _TrackingItem(
-            icon: '💧',
+            iconPath: '../assets/icons/tracking/water.png',
             label: 'Acqua',
             count: waterGlasses,
             goal: 8,
@@ -47,7 +47,7 @@ class TrackingCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           _TrackingItem(
-            icon: '🍎',
+            iconPath: '../assets/icons/tracking/fruit.png',
             label: 'Frutta',
             count: fruitServings,
             goal: 3,
@@ -56,7 +56,7 @@ class TrackingCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           _TrackingItem(
-            icon: '🥦',
+            iconPath: '../assets/icons/tracking/veggies.png',
             label: 'Verdura',
             count: veggieServings,
             goal: 4,
@@ -70,7 +70,7 @@ class TrackingCard extends StatelessWidget {
 }
 
 class _TrackingItem extends StatelessWidget {
-  final String icon;
+  final String iconPath;
   final String label;
   final int count;
   final int goal;
@@ -78,7 +78,7 @@ class _TrackingItem extends StatelessWidget {
   final VoidCallback onIncrement;
 
   const _TrackingItem({
-    required this.icon,
+    required this.iconPath,
     required this.label,
     required this.count,
     required this.goal,
@@ -90,7 +90,13 @@ class _TrackingItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(icon, style: const TextStyle(fontSize: 24)),
+        Image.asset(
+          iconPath,
+          width: 32,
+          height: 32,
+          errorBuilder: (_, __, ___) =>
+              const Icon(Icons.check_circle, size: 32),
+        ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(

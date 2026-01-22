@@ -27,7 +27,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Carboidrati',
-            icon: '🌾',
+            iconPath: '../assets/icons/macros/carbs.png',
             value: carbs,
             goal: carbsGoal,
             color: AppTheme.carbs,
@@ -37,7 +37,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Proteine',
-            icon: '🥩',
+            iconPath: '../assets/icons/macros/protein.png',
             value: protein,
             goal: proteinGoal,
             color: AppTheme.protein,
@@ -47,7 +47,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Grassi',
-            icon: '🥑',
+            iconPath: '../assets/icons/macros/fats.png',
             value: fats,
             goal: fatsGoal,
             color: AppTheme.fats,
@@ -60,14 +60,14 @@ class MacroPillsCard extends StatelessWidget {
 
 class _MacroPill extends StatelessWidget {
   final String label;
-  final String icon;
+  final String iconPath;
   final double value;
   final double goal;
   final Color color;
 
   const _MacroPill({
     required this.label,
-    required this.icon,
+    required this.iconPath,
     required this.value,
     required this.goal,
     required this.color,
@@ -90,7 +90,13 @@ class _MacroPill extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(icon, style: const TextStyle(fontSize: 16)),
+              Image.asset(
+                iconPath,
+                width: 28,
+                height: 28,
+                errorBuilder: (_, __, ___) =>
+                    Icon(Icons.fastfood, size: 28, color: color),
+              ),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(

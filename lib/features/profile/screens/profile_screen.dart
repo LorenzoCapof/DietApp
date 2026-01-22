@@ -88,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                 ('Proteine target', '92 g/giorno'),
                 ('Carboidrati target', '208 g/giorno'),
                 ('Grassi target', '51 g/giorno'),
-                ('Pasti al giorno', '4 (Colazione, pranzo, spuntino, cena)'),
+                ('Pasti al giorno', '4'),
               ],
             ),
 
