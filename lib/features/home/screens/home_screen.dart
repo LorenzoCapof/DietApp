@@ -174,7 +174,7 @@ class HomeScreen extends StatelessWidget {
             '$greeting,',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          const SizedBox(height: 4),
+          //const SizedBox(height: 2),
           // Nome - Crimson Pro 700, 36sp
           Text(
             userName,

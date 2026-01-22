@@ -27,7 +27,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Carboidrati',
-            iconPath: '../assets/icons/macros/carbs.png',
+            iconPath: 'assets/icons/macros/carbs.png',
             value: carbs,
             goal: carbsGoal,
             color: AppTheme.carbs,
@@ -37,7 +37,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Proteine',
-            iconPath: '../assets/icons/macros/protein.png',
+            iconPath: 'assets/icons/macros/protein.png',
             value: protein,
             goal: proteinGoal,
             color: AppTheme.protein,
@@ -47,7 +47,7 @@ class MacroPillsCard extends StatelessWidget {
         Expanded(
           child: _MacroPill(
             label: 'Grassi',
-            iconPath: '../assets/icons/macros/fats.png',
+            iconPath: 'assets/icons/macros/fats.png',
             value: fats,
             goal: fatsGoal,
             color: AppTheme.fats,

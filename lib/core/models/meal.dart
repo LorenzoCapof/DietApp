@@ -25,13 +25,13 @@ enum MealType {
    Image get icon {
     switch (this) {
       case MealType.breakfast:
-        return Image.asset('../assets/icons/meals/breakfast.png',width: 32,height: 32);
+        return Image.asset('assets/icons/meals/breakfast.png',width: 32,height: 32);
       case MealType.lunch:
-        return Image.asset('../assets/icons/meals/lunch.png',width: 32,height: 32);
+        return Image.asset('assets/icons/meals/lunch.png',width: 32,height: 32);
       case MealType.dinner:
-        return Image.asset('../assets/icons/meals/dinner.png',width: 32,height: 32);
+        return Image.asset('assets/icons/meals/dinner.png',width: 32,height: 32);
       case MealType.snack:
-        return Image.asset('../assets/icons/meals/snack.png',width: 32,height: 32);
+        return Image.asset('assets/icons/meals/snack.png',width: 32,height: 32);
     }
   }
 }

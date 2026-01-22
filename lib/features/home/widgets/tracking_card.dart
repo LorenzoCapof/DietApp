@@ -38,7 +38,7 @@ class TrackingCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _TrackingItem(
-            iconPath: '../assets/icons/tracking/water.png',
+            iconPath: 'assets/icons/tracking/water.png',
             label: 'Acqua',
             count: waterGlasses,
             goal: 8,
@@ -47,7 +47,7 @@ class TrackingCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           _TrackingItem(
-            iconPath: '../assets/icons/tracking/fruit.png',
+            iconPath: 'assets/icons/tracking/fruit.png',
             label: 'Frutta',
             count: fruitServings,
             goal: 3,
@@ -56,7 +56,7 @@ class TrackingCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           _TrackingItem(
-            iconPath: '../assets/icons/tracking/veggies.png',
+            iconPath: 'assets/icons/tracking/veggies.png',
             label: 'Verdura',
             count: veggieServings,
             goal: 4,
