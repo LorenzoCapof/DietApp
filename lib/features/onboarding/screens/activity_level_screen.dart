@@ -99,7 +99,7 @@ class ActivityLevelScreen extends StatelessWidget {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: current / total,
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
           valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
           minHeight: 6,
           borderRadius: BorderRadius.circular(3),
@@ -121,13 +121,13 @@ class ActivityLevelScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppTheme.primary.withOpacity(0.1)
+              ? AppTheme.primary.withValues(alpha: 0.1)
               : AppTheme.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusButton),
           border: Border.all(
             color: isSelected
                 ? AppTheme.primary
-                : AppTheme.primary.withOpacity(0.15),
+                : AppTheme.primary.withValues(alpha: 0.15),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -140,7 +140,7 @@ class ActivityLevelScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppTheme.primary
-                    : AppTheme.primary.withOpacity(0.1),
+                    : AppTheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(

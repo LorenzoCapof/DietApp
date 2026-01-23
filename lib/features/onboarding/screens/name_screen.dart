@@ -131,7 +131,7 @@ class _NameScreenState extends State<NameScreen> {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: current / total,
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
           valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
           minHeight: 6,
           borderRadius: BorderRadius.circular(3),

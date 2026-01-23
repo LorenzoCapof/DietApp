@@ -42,11 +42,14 @@ class HomeScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(AppTheme.paddingStandard),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
-                      // Calorie Ring
                       CalorieRingCard(
                         consumed: provider.consumedCalories,
                         goal: provider.calorieGoal,
                         burned: 0,
+
+                        consumedProtein: provider.consumedProtein,
+                        consumedCarbs: provider.consumedCarbs,
+                        consumedFats: provider.consumedFats,
                       ),
                       
                       const SizedBox(height: AppTheme.sectionGap),
@@ -162,20 +165,19 @@ class HomeScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppTheme.paddingStandard,
-        20, // Top padding ridotto
+        20,
         AppTheme.paddingStandard,
         0,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Greeting - Poppins 400, 14sp
+          // Greeting
           Text(
             '$greeting,',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
-          //const SizedBox(height: 2),
-          // Nome - Crimson Pro 700, 36sp
+          // Nome
           Text(
             userName,
             style: Theme.of(context).textTheme.displayLarge,
@@ -196,7 +198,7 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Pulsante precedente - hit target 44x44
+          // Pulsante precedente
           SizedBox(
             width: 44,
             height: 44,
@@ -217,7 +219,7 @@ class HomeScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AppTheme.primary.withOpacity(0.08),
+                color: AppTheme.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
               ),
               child: Row(
@@ -243,7 +245,6 @@ class HomeScreen extends StatelessWidget {
           
           const SizedBox(width: 12),
           
-          // Pulsante successivo - hit target 44x44
           SizedBox(
             width: 44,
             height: 44,

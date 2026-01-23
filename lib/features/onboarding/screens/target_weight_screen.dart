@@ -124,7 +124,7 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withOpacity(0.08),
+                        color: AppTheme.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                       ),
                       child: Row(
@@ -222,10 +222,10 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
                           return Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: AppTheme.accent2.withOpacity(0.1),
+                              color: AppTheme.accent2.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                               border: Border.all(
-                                color: AppTheme.accent2.withOpacity(0.3),
+                                color: AppTheme.accent2.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Column(
@@ -242,7 +242,7 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
                                     Container(
                                       height: 40,
                                       width: 1,
-                                      color: AppTheme.accent2.withOpacity(0.3),
+                                      color: AppTheme.accent2.withValues(alpha: 0.3),
                                     ),
                                     _buildMetric(
                                       context,
@@ -304,7 +304,7 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: current / total,
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
           valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
           minHeight: 6,
           borderRadius: BorderRadius.circular(3),

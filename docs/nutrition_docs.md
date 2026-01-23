@@ -351,4 +351,4 @@ Ricorda: la costanza è più importante della perfezione! 💪
 
 ---
 
-*Ultima revisione: Gennaio 2025*
+*Ultima revisione: Gennaio 2026*

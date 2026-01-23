@@ -239,15 +239,14 @@ class NutritionService {
       items: [
         FoodItem(
           id: _uuid.v4(),
-          name: 'Colazione',
+          name: 'Cappuccino e Cornetto',
           nutrition: NutritionInfo(
             calories: 370,
-            protein: 15,
-            carbs: 45,
-            fats: 12,
+            protein: 50,
+            carbs: 105,
+            fats: 30,
           ),
           servingSize: 100,
-          imageUrl: '🥐',
         ),
       ],
       timestamp: DateTime.now(),
@@ -259,15 +258,14 @@ class NutritionService {
       items: [
         FoodItem(
           id: _uuid.v4(),
-          name: 'Pranzo',
+          name: 'Spaghetti al Pomodoro',
           nutrition: NutritionInfo(
             calories: 555,
-            protein: 35,
+            protein: 250,
             carbs: 60,
-            fats: 18,
+            fats: 260,
           ),
           servingSize: 200,
-          imageUrl: '🍝',
         ),
       ],
       timestamp: DateTime.now(),

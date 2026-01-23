@@ -160,7 +160,7 @@ class SummaryScreen extends StatelessWidget {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: 1.0,
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
           valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
           minHeight: 6,
           borderRadius: BorderRadius.circular(3),
@@ -176,7 +176,7 @@ class SummaryScreen extends StatelessWidget {
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
-          color: AppTheme.primary.withOpacity(0.15),
+          color: AppTheme.primary.withValues(alpha: 0.15),
         ),
         boxShadow: AppTheme.cardShadow,
       ),
@@ -203,7 +203,7 @@ class SummaryScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppTheme.primary.withOpacity(0.08),
+              color: AppTheme.primary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
             ),
             child: Row(
@@ -217,7 +217,7 @@ class SummaryScreen extends StatelessWidget {
                 Container(
                   height: 40,
                   width: 1,
-                  color: AppTheme.primary.withOpacity(0.2),
+                  color: AppTheme.primary.withValues(alpha: 0.2),
                 ),
                 _buildMetric(
                   context,
@@ -239,7 +239,7 @@ class SummaryScreen extends StatelessWidget {
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
-          color: AppTheme.primary.withOpacity(0.15),
+          color: AppTheme.primary.withValues(alpha: 0.15),
         ),
         boxShadow: AppTheme.cardShadow,
       ),

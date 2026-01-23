@@ -29,7 +29,7 @@ class AppShell extends StatelessWidget {
           color: AppTheme.surface,
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primary.withOpacity(0.08),
+              color: AppTheme.primary.withValues(alpha: 0.08),
               blurRadius: 20,
               offset: const Offset(0, -4),
             ),
@@ -114,12 +114,12 @@ class AppShell extends StatelessWidget {
             children: [
               Icon(
                 icon,
-                size: 32,
+                size: 24,
                 color: isSelected
                     ? AppTheme.primary
                     : AppTheme.textSecondary,
               ),
-              const SizedBox(height: 2)
+              const SizedBox(height: 4)
             ],
           ),
         ),

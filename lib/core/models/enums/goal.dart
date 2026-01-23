@@ -31,16 +31,17 @@ enum Goal {
   }
 
   /// Icona rappresentativa
-  String get icon {
+  String get iconAsset {
     switch (this) {
       case Goal.loseWeight:
-        return '📉';
+        return 'assets/icons/goals/goal_lose.png';
       case Goal.maintain:
-        return '⚖️';
+        return 'assets/icons/goals/goal_maintain.png';
       case Goal.gainWeight:
-        return '📈';
+        return 'assets/icons/goals/goal_gain.png';
     }
   }
+
 
   /// Modifica calorica giornaliera rispetto a TDEE
   int get calorieAdjustment {

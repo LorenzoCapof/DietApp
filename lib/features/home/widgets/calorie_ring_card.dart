@@ -6,12 +6,20 @@ class CalorieRingCard extends StatelessWidget {
   final double consumed;
   final double goal;
   final double burned;
+  
+  // NUOVO: Dati macronutrienti per colorare il ring
+  final double consumedProtein;
+  final double consumedCarbs;
+  final double consumedFats;
 
   const CalorieRingCard({
     super.key,
     required this.consumed,
     required this.goal,
     this.burned = 0,
+    this.consumedProtein = 0,
+    this.consumedCarbs = 0,
+    this.consumedFats = 0,
   });
 
   @override
@@ -28,7 +36,7 @@ class CalorieRingCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Ring Progress - dimensioni ridotte
+          // Ring Progress - ora colorato per macronutrienti
           SizedBox(
             height: AppTheme.ringDiameter,
             width: AppTheme.ringDiameter,
@@ -40,11 +48,11 @@ class CalorieRingCard extends StatelessWidget {
                   size: const Size(AppTheme.ringDiameter, AppTheme.ringDiameter),
                   painter: CircleProgressPainter(
                     progress: 1.0,
-                    color: AppTheme.accent3.withOpacity(0.12),
+                    color: AppTheme.accent3.withValues(alpha: 0.12),
                     strokeWidth: AppTheme.ringStrokeWidth,
                   ),
                 ),
-                // Progress Circle - animato
+                // NUOVO: Progress Circle multi-colore basato su macro
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0.0, end: progress),
                   duration: const Duration(milliseconds: 700),
@@ -52,10 +60,13 @@ class CalorieRingCard extends StatelessWidget {
                   builder: (context, value, child) {
                     return CustomPaint(
                       size: const Size(AppTheme.ringDiameter, AppTheme.ringDiameter),
-                      painter: CircleProgressPainter(
+                      painter: MacroCircleProgressPainter(
                         progress: value,
-                        color: AppTheme.accent3,
                         strokeWidth: AppTheme.ringStrokeWidth,
+                        // Calorie da ciascun macro (protein=4kcal/g, carbs=4kcal/g, fats=9kcal/g)
+                        proteinCalories: consumedProtein * 4,
+                        carbsCalories: consumedCarbs * 4,
+                        fatsCalories: consumedFats * 9,
                       ),
                     );
                   },
@@ -86,7 +97,7 @@ class CalorieRingCard extends StatelessWidget {
           
           const SizedBox(height: 16),
           
-          // Stats Row - più compatta
+          // MODIFICATO: Stats Row con testi più grandi
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -97,7 +108,7 @@ class CalorieRingCard extends StatelessWidget {
               Container(
                 height: 32,
                 width: 1,
-                color: AppTheme.primary.withOpacity(0.15),
+                color: AppTheme.primary.withValues(alpha: 0.15),
               ),
               _StatItem(
                 label: 'Bruciate (kcal)',
@@ -124,20 +135,29 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // MODIFICATO: Label più grande (da 11sp a 12sp)
         Text(
           label,
-          style: AppTheme.ringStatsLabelStyle,
+          style: AppTheme.ringStatsLabelStyle.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 4),
+        // MODIFICATO: Valore più grande (da 14sp a 20sp) e più bold
         Text(
           value.toString(),
-          style: AppTheme.ringStatsValueStyle,
+          style: AppTheme.ringStatsValueStyle.copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ],
     );
   }
 }
 
+// Painter originale per il background (mantenuto invariato)
 class CircleProgressPainter extends CustomPainter {
   final double progress;
   final Color color;
@@ -171,4 +191,107 @@ class CircleProgressPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+class MacroCircleProgressPainter extends CustomPainter {
+  final double progress;
+  final double strokeWidth;
+  final double proteinCalories;
+  final double carbsCalories;
+  final double fatsCalories;
+
+  MacroCircleProgressPainter({
+    required this.progress,
+    required this.strokeWidth,
+    required this.proteinCalories,
+    required this.carbsCalories,
+    required this.fatsCalories,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+    
+    final totalCalories = proteinCalories + carbsCalories + fatsCalories;
+    
+    // Se non ci sono calorie, non disegnare nulla
+    if (totalCalories == 0) return;
+    
+    // Calcola la percentuale di ciascun macro sul totale consumato
+    final proteinPercent = proteinCalories / totalCalories;
+    final carbsPercent = carbsCalories / totalCalories;
+    final fatsPercent = fatsCalories / totalCalories;
+    
+    // Angolo totale da disegnare (basato sul progress complessivo)
+    final totalSweepAngle = 2 * math.pi * progress;
+    
+    double currentAngle = -math.pi / 2; // Inizia dall'alto (ore 12)
+    
+    // Disegna arco PROTEINE (arancione)
+    if (proteinPercent > 0) {
+      final proteinSweep = totalSweepAngle * proteinPercent;
+      final proteinPaint = Paint()
+        ..color = AppTheme.protein
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
+      
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        currentAngle,
+        proteinSweep,
+        false,
+        proteinPaint,
+      );
+      
+      currentAngle += proteinSweep;
+    }
+    
+    // Disegna arco CARBOIDRATI (beige)
+    if (carbsPercent > 0) {
+      final carbsSweep = totalSweepAngle * carbsPercent;
+      final carbsPaint = Paint()
+        ..color = AppTheme.carbs
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
+      
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        currentAngle,
+        carbsSweep,
+        false,
+        carbsPaint,
+      );
+      
+      currentAngle += carbsSweep;
+    }
+    
+    // Disegna arco GRASSI (verde)
+    if (fatsPercent > 0) {
+      final fatsSweep = totalSweepAngle * fatsPercent;
+      final fatsPaint = Paint()
+        ..color = AppTheme.fats
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
+      
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        currentAngle,
+        fatsSweep,
+        false,
+        fatsPaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant MacroCircleProgressPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.proteinCalories != proteinCalories ||
+        oldDelegate.carbsCalories != carbsCalories ||
+        oldDelegate.fatsCalories != fatsCalories;
+  }
 }

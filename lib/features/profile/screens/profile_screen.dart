@@ -137,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
           height: 120,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppTheme.accent2.withOpacity(0.2),
+            color: AppTheme.accent2.withValues(alpha: 0.2),
             border: Border.all(
               color: AppTheme.accent2,
               width: 3,
@@ -194,7 +194,7 @@ class ProfileScreen extends StatelessWidget {
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(AppTheme.radiusCard),
         border: Border.all(
-          color: AppTheme.primary.withOpacity(0.06),
+          color: AppTheme.primary.withValues(alpha: 0.06),
           width: 1,
         ),
         boxShadow: AppTheme.cardShadow,
@@ -257,7 +257,7 @@ class ProfileScreen extends StatelessWidget {
           Divider(
             height: 1,
             thickness: 1,
-            color: AppTheme.primary.withOpacity(0.06),
+            color: AppTheme.primary.withValues(alpha: 0.06),
           ),
         ],
       ],

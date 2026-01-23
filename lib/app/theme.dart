@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // ============ COLORI PRINCIPALI ============
+  //============ COLORI PRINCIPALI ============
   static const Color primary = Color(0xFF2D5F5D);
   static const Color secondary = Color(0xFFF4E8D8);
   static const Color background = Color(0xFFFAFAF8);
@@ -220,7 +220,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusCard),
           side: BorderSide(
-            color: primary.withOpacity(0.06),
+            color: primary.withValues(alpha:0.06),
             width: 1,
           ),
         ),
@@ -253,7 +253,7 @@ class AppTheme {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radiusButton),
           borderSide: BorderSide(
-            color: primary.withOpacity(0.15),
+            color: primary.withValues(alpha:0.15),
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -290,7 +290,7 @@ class AppTheme {
   // ================= SHADOWS (iOS-style) =================
   static List<BoxShadow> get cardShadow => [
         BoxShadow(
-          color: primary.withOpacity(0.06),
+          color: primary.withValues(alpha:0.06),
           blurRadius: 18,
           offset: const Offset(0, 6),
         ),
@@ -298,7 +298,7 @@ class AppTheme {
 
   static List<BoxShadow> get subtleShadow => [
         BoxShadow(
-          color: primary.withOpacity(0.04),
+          color: primary.withValues(alpha:0.04),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),

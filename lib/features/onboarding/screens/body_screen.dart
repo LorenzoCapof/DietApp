@@ -207,10 +207,10 @@ class _BodyScreenState extends State<BodyScreen> {
                       return Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: categoryColor.withOpacity(0.1),
+                          color: categoryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                           border: Border.all(
-                            color: categoryColor.withOpacity(0.3),
+                            color: categoryColor.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -268,7 +268,7 @@ class _BodyScreenState extends State<BodyScreen> {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: current / total,
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
           valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
           minHeight: 6,
           borderRadius: BorderRadius.circular(3),

@@ -15,6 +15,9 @@ class BirthDateScreen extends StatefulWidget {
 }
 
 class _BirthDateScreenState extends State<BirthDateScreen> {
+  static const int minAge = 10;
+  static const int maxAge = 120;
+
   DateTime? _selectedDate;
 
   @override
@@ -26,13 +29,14 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
 
   Future<void> _selectDate(BuildContext context) async {
     final now = DateTime.now();
-    final hundredYearsAgo = DateTime(now.year - 100, now.month, now.day);
-    final eighteenYearsAgo = DateTime(now.year - 18, now.month, now.day);
+    final maxBirthDate = DateTime(now.year - minAge, now.month, now.day);
+    final minBirthDate = DateTime(now.year - maxAge, now.month, now.day);
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? eighteenYearsAgo,
-      firstDate: hundredYearsAgo,
-      lastDate: eighteenYearsAgo,
+      initialDate: _selectedDate ?? maxBirthDate,
+      firstDate: minBirthDate,
+      lastDate: maxBirthDate,
       locale: const Locale('it', 'IT'),
       builder: (context, child) {
         return Theme(
@@ -65,17 +69,18 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
       );
       return;
     }
-    // Verifica età minima (18 anni)
+
     final age = _calculateAge(_selectedDate!);
-    if (age < 18) {
+    if (age < minAge || age > maxAge) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Devi avere almeno 18 anni per usare l\'app'),
+        SnackBar(
+          content: Text('L\'età deve essere compresa tra $minAge e $maxAge anni'),
           backgroundColor: AppTheme.error,
         ),
       );
       return;
     }
+
     context.read<OnboardingProvider>().setBirthDate(_selectedDate!);
     context.go('/onboarding/body');
   }
@@ -92,8 +97,9 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('d MMMM yyyy', 'it_IT');
+    final dateFormat = DateFormat('EEE d MMM', 'it_IT');
     final age = _selectedDate != null ? _calculateAge(_selectedDate!) : null;
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -109,22 +115,18 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 20),
-              // Progress indicator
               _buildProgress(3, 7),
               const SizedBox(height: 40),
-              // Titolo
               Text(
                 'Quando sei nato?',
                 style: Theme.of(context).textTheme.displaySmall,
               ),
               const SizedBox(height: 12),
-              // Sottotitolo
               Text(
                 'L\'età influenza il calcolo del metabolismo basale',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 40),
-              // Date selector
               InkWell(
                 onTap: () => _selectDate(context),
                 borderRadius: BorderRadius.circular(AppTheme.radiusButton),
@@ -136,7 +138,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                     border: Border.all(
                       color: _selectedDate != null
                           ? AppTheme.primary
-                          : AppTheme.primary.withOpacity(0.15),
+                          : AppTheme.primary.withValues(alpha: 0.15),
                       width: _selectedDate != null ? 2 : 1,
                     ),
                   ),
@@ -148,7 +150,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                         decoration: BoxDecoration(
                           color: _selectedDate != null
                               ? AppTheme.primary
-                              : AppTheme.primary.withOpacity(0.1),
+                              : AppTheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
@@ -175,7 +177,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                                   : 'Seleziona data',
                               style: Theme.of(context)
                                   .textTheme
-                                  .titleMedium
+                                  .titleLarge
                                   ?.copyWith(
                                     color: _selectedDate != null
                                         ? AppTheme.primary
@@ -197,15 +199,14 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              // Age preview
               if (_selectedDate != null && age != null)
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppTheme.primary.withOpacity(0.08),
+                    color: AppTheme.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
                     border: Border.all(
-                      color: AppTheme.primary.withOpacity(0.2),
+                      color: AppTheme.primary.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Row(
@@ -218,14 +219,16 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        age < 18
-                            ? 'Devi avere almeno 18 anni'
+                        age < minAge || age > maxAge
+                            ? 'Età non valida'
                             : 'Hai $age anni',
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
                             ?.copyWith(
-                              color: age < 18 ? AppTheme.error : AppTheme.primary,
+                              color: age < minAge || age > maxAge
+                                  ? AppTheme.error
+                                  : AppTheme.primary,
                               fontWeight: FontWeight.w600,
                             ),
                       ),
@@ -233,7 +236,6 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
                   ),
                 ),
               const Spacer(),
-              // Continue button
               ElevatedButton(
                 onPressed: _continue,
                 child: const Text('Continua'),
@@ -261,7 +263,7 @@ class _BirthDateScreenState extends State<BirthDateScreen> {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: current / total,
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
           valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
           minHeight: 6,
           borderRadius: BorderRadius.circular(3),

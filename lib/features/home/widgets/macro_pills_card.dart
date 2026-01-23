@@ -123,7 +123,7 @@ class _MacroPill extends StatelessWidget {
               builder: (context, value, child) {
                 return LinearProgressIndicator(
                   value: value,
-                  backgroundColor: color.withOpacity(0.15),
+                  backgroundColor: color.withValues(alpha: 0.15),
                   valueColor: AlwaysStoppedAnimation(color),
                   minHeight: 7,
                 );

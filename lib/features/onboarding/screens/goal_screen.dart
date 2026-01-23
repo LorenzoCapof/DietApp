@@ -106,7 +106,7 @@ class GoalScreen extends StatelessWidget {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: current / total,
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          backgroundColor: AppTheme.primary.withValues(alpha: 0.1),
           valueColor: const AlwaysStoppedAnimation(AppTheme.primary),
           minHeight: 6,
           borderRadius: BorderRadius.circular(3),
@@ -141,13 +141,13 @@ class GoalScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isSelected
-              ? goalColor.withOpacity(0.12)
+              ? goalColor.withValues(alpha: 0.12)
               : AppTheme.surface,
           borderRadius: BorderRadius.circular(AppTheme.radiusCard),
           border: Border.all(
             color: isSelected
                 ? goalColor
-                : AppTheme.primary.withOpacity(0.15),
+                : AppTheme.primary.withValues(alpha: 0.15),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -163,13 +163,15 @@ class GoalScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? goalColor
-                        : goalColor.withOpacity(0.15),
+                        : goalColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: Text(
-                      goal.icon,
-                      style: const TextStyle(fontSize: 28),
+                    child: Image.asset(
+                      goal.iconAsset,
+                      width: 28,
+                      height: 28,
+                      color: isSelected ? Colors.white : goalColor,
                     ),
                   ),
                 ),
@@ -198,7 +200,7 @@ class GoalScreen extends StatelessWidget {
             Text(
               goal.description,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isSelected ? goalColor.withOpacity(0.8) : AppTheme.textSecondary,
+                    color: isSelected ? goalColor.withValues(alpha: 0.8) : AppTheme.textSecondary,
                   ),
             ),
           ],
