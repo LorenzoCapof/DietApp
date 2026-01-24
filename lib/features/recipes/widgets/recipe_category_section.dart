@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 import '../../../app/theme.dart';
-import '../../../core/models/recipe.dart';
+import '../../../core/models/recipe.dart'; // Usa il modello esistente
 import 'recipe_card.dart';
 
 class RecipeCategorySection extends StatelessWidget {
@@ -23,9 +22,9 @@ class RecipeCategorySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header
+        // Header con padding
         Padding(
-          padding: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingStandard),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -50,7 +49,9 @@ class RecipeCategorySection extends StatelessWidget {
           ),
         ),
 
-        // Content - sempre in carosello
+        const SizedBox(height: 12),
+
+        // Carousel senza padding (full-width)
         _buildCarousel(),
       ],
     );
@@ -61,11 +62,12 @@ class RecipeCategorySection extends StatelessWidget {
       height: 240,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: AppTheme.paddingStandard),
         itemCount: recipes.length,
         separatorBuilder: (context, index) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           return SizedBox(
-            width: (this.isBigCard) ? 300 : 180,
+            width: (isBigCard) ? 300 : 180,
             child: RecipeCard(recipe: recipes[index]),
           );
         },
@@ -73,4 +75,3 @@ class RecipeCategorySection extends StatelessWidget {
     );
   }
 }
-

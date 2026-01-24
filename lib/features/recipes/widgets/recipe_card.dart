@@ -161,24 +161,53 @@ class _RecipeCardState extends State<RecipeCard> {
           borderRadius: const BorderRadius.vertical(
             top: Radius.circular(AppTheme.radiusCard),
           ),
-          child: Image.network(
-            widget.recipe.imageUrl,
-            height: 140,
-            width: double.infinity,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
+          child: Stack(
+            children: [
+              Image.network(
+                widget.recipe.imageUrl,
                 height: 140,
-                color: AppTheme.surface,
-                child: const Center(
-                  child: Icon(
-                    Icons.restaurant,
-                    size: 48,
-                    color: AppTheme.textDisabled,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 140,
+                    color: AppTheme.surface,
+                    child: const Center(
+                      child: Icon(
+                        Icons.restaurant,
+                        size: 48,
+                        color: AppTheme.textDisabled,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              
+              // Favorite button overlay
+              Positioned(
+                top: 8,
+                right: 8,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isFavorite = !_isFavorite;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      _isFavorite ? Icons.favorite : Icons.favorite_border,
+                      size: 16,
+                      color: _isFavorite ? Colors.red : AppTheme.textSecondary,
+                    ),
                   ),
                 ),
-              );
-            },
+              ),
+            ],
           ),
         ),
 
@@ -213,22 +242,6 @@ class _RecipeCardState extends State<RecipeCard> {
                     '${widget.recipe.calories} kcal',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppTheme.textSecondary,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  // Favorite Button
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isFavorite = !_isFavorite;
-                      });
-                    },
-                    child: Icon(
-                      _isFavorite ? Icons.favorite : Icons.favorite_border,
-                      size: 20,
-                      color: _isFavorite ? Colors.red : AppTheme.textSecondary,
                     ),
                   ),
                 ],

@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
-import '../../../core/models/recipe.dart';
+import '../../../core/models/recipe.dart'; // Usa il modello esistente
 import '../widgets/recipe_card.dart';
 import '../widgets/recipe_category_section.dart';
 
@@ -35,41 +35,40 @@ class _RecipesScreenState extends State<RecipesScreen> {
             ),
 
             // Content
-            SliverPadding(
-              padding: const EdgeInsets.all(AppTheme.paddingStandard),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  // Sezione PASTI
-                  RecipeCategorySection(
-                    title: 'PASTI',
-                    recipes: _getMealsRecipes(),
-                    onSeeAll: () => _navigateToCategory('PASTI'),
-                    isBigCard: true,
-                  ),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // Sezione COLAZIONE
-                  RecipeCategorySection(
-                    title: 'COLAZIONE',
-                    recipes: _getBreakfastRecipes(),
-                    onSeeAll: () => _navigateToCategory('COLAZIONE'),
-                    isBigCard: false,
-                  ),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // Sezione SPUNTINI
-                  RecipeCategorySection(
-                    title: 'SPUNTINI',
-                    recipes: _getSnacksRecipes(),
-                    onSeeAll: () => _navigateToCategory('SPUNTINI'),
-                    isBigCard: false,
-                  ),
-                  
-                  const SizedBox(height: 40),
-                ]),
-              ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                const SizedBox(height: AppTheme.paddingStandard),
+                
+                // Sezione PASTI
+                RecipeCategorySection(
+                  title: 'PASTI',
+                  recipes: _getMealsRecipes(),
+                  onSeeAll: () => _navigateToCategory('PASTI'),
+                  isBigCard: true,
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // Sezione COLAZIONE
+                RecipeCategorySection(
+                  title: 'COLAZIONE',
+                  recipes: _getBreakfastRecipes(),
+                  onSeeAll: () => _navigateToCategory('COLAZIONE'),
+                  isBigCard: false,
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // Sezione SPUNTINI
+                RecipeCategorySection(
+                  title: 'SPUNTINI',
+                  recipes: _getSnacksRecipes(),
+                  onSeeAll: () => _navigateToCategory('SPUNTINI'),
+                  isBigCard: false,
+                ),
+                
+                const SizedBox(height: 40),
+              ]),
             ),
           ],
         ),
@@ -234,13 +233,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
   }
 
   void _navigateToCategory(String category) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Mostra tutte le ricette: $category'),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    context.push('/recipes-list/${Uri.encodeComponent(category)}');
   }
 
   void _showFilterMenu(BuildContext context) {

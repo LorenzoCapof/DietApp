@@ -14,20 +14,11 @@ class ProfileScreen extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      // ============ APP BAR ============
-      appBar: AppBar(
-        title: Text(
-          'Profilo',
-          style: textTheme.titleLarge,
-        ),
-        centerTitle: true,
-      ),
-
-      // ============ BODY ============
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppTheme.paddingStandard),
         child: Column(
           children: [
+            const SizedBox(height: AppTheme.sectionGap * 2.5),
             // ============ HEADER: AVATAR + NOME ============
             _buildProfileHeader(textTheme),
 

@@ -21,6 +21,10 @@ import '../features/onboarding/screens/goal_screen.dart';
 import '../features/onboarding/screens/target_weight_screen.dart';
 import '../features/onboarding/screens/summary_screen.dart';
 
+// Ricette / Dispensa
+import '../features/pantry/screens/products_list_screen.dart';
+import '../features/recipes/screens/recipes_list_screen.dart';
+
 import '../core/services/storage_service.dart';
 
 /// Router principale dell'app con controllo onboarding
@@ -113,6 +117,22 @@ final GoRouter router = GoRouter(
       ],
     ),
     
+    // Route per Dispensa / Ricette
+    GoRoute(
+      path: '/products-list/:category',
+      builder: (context, state) {
+        final category = Uri.decodeComponent(state.pathParameters['category']!);
+        return ProductsListScreen(category: category);
+      },
+    ),
+    GoRoute(
+      path: '/recipes-list/:category',
+      builder: (context, state) {
+        final category = Uri.decodeComponent(state.pathParameters['category']!);
+        return RecipesListScreen(category: category);
+      },
+    ),
+
     // Route aggiuntive fuori dalla shell (fullscreen)
     // Esempio per future schermate di dettaglio
     // GoRoute(
