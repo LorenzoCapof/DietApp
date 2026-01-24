@@ -119,7 +119,7 @@ class AppShell extends StatelessWidget {
                     ? AppTheme.primary
                     : AppTheme.textSecondary,
               ),
-              const SizedBox(height: 4)
+              const SizedBox(height: 2)
             ],
           ),
         ),
