@@ -259,76 +259,86 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           flexibleSpace: FlexibleSpaceBar(
-            background: _product!.imageFrontUrl != null
-                ? Image.network(
-                    _product!.imageFrontUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: AppTheme.primary.withOpacity(0.1),
-                        child: const Icon(
-                          Icons.image_not_supported,
-                          size: 80,
-                          color: AppTheme.textDisabled,
-                        ),
-                      );
-                    },
-                  )
-                : Container(
-                    color: AppTheme.primary.withOpacity(0.1),
-                    child: const Icon(
-                      Icons.shopping_bag,
-                      size: 80,
-                      color: AppTheme.textDisabled,
+            // Titolo e sottotitolo sono gestiti solitamente qui o dentro lo Stack
+            background: Stack(
+              fit: StackFit.expand,
+              children: [
+                // 1. Immagine di sfondo
+                _product!.imageFrontUrl != null
+                    ? Image.network(
+                        _product!.imageFrontUrl!,
+                        fit: BoxFit.cover,
+                        // Gestione del caricamento
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child; // Immagine caricata
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                              color: Colors.white,
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
+                      )
+                    : _buildErrorPlaceholder(),
+
+                // 2. Gradiente Scuro (Overlay)
+                const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black87, // Intensità dell'ombra in basso
+                      ],
+                      stops: [0.6, 1.0], // Il gradiente inizia a scurirsi dal 60% dell'altezza
                     ),
                   ),
+                ),
+
+                // 3. Testi (Titolo e Sottotitolo)
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _product!.productName ?? "Nome Prodotto",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _product!.brands! ?? "Marca",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
 
         // Content
         SliverToBoxAdapter(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Product Info Card
-              Container(
-                margin: const EdgeInsets.all(AppTheme.paddingStandard),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppTheme.surface,
-                  borderRadius: BorderRadius.circular(AppTheme.radiusCard),
-                  border: Border.all(
-                    color: AppTheme.primary.withOpacity(0.06),
-                    width: 1,
-                  ),
-                  boxShadow: AppTheme.cardShadow,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Product Name
-                    Text(
-                      _product!.productName ?? 'Nome non disponibile',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    // Brand
-                    if (_product!.brands != null)
-                      Text(
-                        _product!.brands!,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppTheme.textSecondary,
-                            ),
-                      ),
-                  ],
-                ),
-              ),
-
               // Nutrition Score
               Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: AppTheme.paddingStandard,
-                ),
+                margin: const EdgeInsets.all(AppTheme.paddingStandard),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppTheme.surface,
@@ -348,7 +358,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     NutritionScoreCircle(score: _nutritionScore),
                     const SizedBox(height: 16),
                     Text(
@@ -362,7 +372,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
 
               // Nutrition Table
               if (_product!.nutriments != null) _buildNutritionTable(),
@@ -557,6 +567,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildErrorPlaceholder() {
+    return Container(
+      color: AppTheme.primary.withOpacity(0.1),
+      child: const Icon(
+        Icons.image_not_supported,
+        size: 80,
+        color: AppTheme.textDisabled,
+      ),
     );
   }
 
