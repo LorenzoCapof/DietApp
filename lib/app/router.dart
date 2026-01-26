@@ -23,7 +23,9 @@ import '../features/onboarding/screens/summary_screen.dart';
 
 // Ricette / Dispensa
 import '../features/pantry/screens/products_list_screen.dart';
+import '../features/pantry/screens/barcode_scanner_screen.dart';
 import '../features/recipes/screens/recipes_list_screen.dart';
+import '../features/pantry/screens/product_detail_screen.dart';
 
 import '../core/services/storage_service.dart';
 
@@ -123,6 +125,17 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final category = Uri.decodeComponent(state.pathParameters['category']!);
         return ProductsListScreen(category: category);
+      },
+    ),
+    GoRoute(
+      path: '/barcode-scanner',
+      builder: (context, state) => const BarcodeScannerScreen(),
+    ),
+    GoRoute(
+      path: '/product-detail/:barcode',
+      builder: (context, state) {
+        final barcode = state.pathParameters['barcode']!;
+        return ProductDetailScreen(barcode: barcode);
       },
     ),
     GoRoute(

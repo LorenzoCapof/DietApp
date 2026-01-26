@@ -29,6 +29,10 @@ dependencies:
   intl: ^0.20.2  # Formattazione date/numeri
   uuid: ^4.2.1   # Generazione ID univoci
 
+  # Scanner
+  mobile_scanner: ^5.2.3
+  openfoodfacts: ^3.29.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

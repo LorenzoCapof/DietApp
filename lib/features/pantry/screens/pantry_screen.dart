@@ -354,12 +354,6 @@ class _PantryScreenState extends State<PantryScreen> {
   }
 
   void _openBarcodeScanner(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Scanner codice a barre - Coming soon!'),
-        duration: Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    GoRouter.of(context).push('/barcode-scanner');
   }
 }
