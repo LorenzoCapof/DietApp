@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../../../app/theme.dart';
 
-class CalorieRingCard extends StatelessWidget {
+class CalorieRingCard extends StatefulWidget {
   final double consumed;
   final double goal;
   final double burned;
-  
-  // NUOVO: Dati macronutrienti per colorare il ring
   final double consumedProtein;
   final double consumedCarbs;
   final double consumedFats;
@@ -23,10 +21,97 @@ class CalorieRingCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final remaining = (goal - consumed).clamp(0, goal);
-    final progress = (consumed / goal).clamp(0.0, 1.0);
+  State<CalorieRingCard> createState() => _CalorieRingCardState();
+}
 
+class _CalorieRingCardState extends State<CalorieRingCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _consumedAnimation;
+  late Animation<double> _proteinAnimation;
+  late Animation<double> _carbsAnimation;
+  late Animation<double> _fatsAnimation;
+
+  double _previousConsumed = 0;
+  double _previousProtein = 0;
+  double _previousCarbs = 0;
+  double _previousFats = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _initializeAnimations();
+    _controller.forward();
+  }
+
+  @override
+  void didUpdateWidget(CalorieRingCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Se i valori cambiano, riavvia l'animazione
+    if (oldWidget.consumed != widget.consumed ||
+        oldWidget.consumedProtein != widget.consumedProtein ||
+        oldWidget.consumedCarbs != widget.consumedCarbs ||
+        oldWidget.consumedFats != widget.consumedFats) {
+      
+      _previousConsumed = oldWidget.consumed;
+      _previousProtein = oldWidget.consumedProtein;
+      _previousCarbs = oldWidget.consumedCarbs;
+      _previousFats = oldWidget.consumedFats;
+
+      _initializeAnimations();
+      _controller.forward(from: 0);
+    }
+  }
+
+  void _initializeAnimations() {
+    _consumedAnimation = Tween<double>(
+      begin: _previousConsumed,
+      end: widget.consumed,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _proteinAnimation = Tween<double>(
+      begin: _previousProtein,
+      end: widget.consumedProtein,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _carbsAnimation = Tween<double>(
+      begin: _previousCarbs,
+      end: widget.consumedCarbs,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _fatsAnimation = Tween<double>(
+      begin: _previousFats,
+      end: widget.consumedFats,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppTheme.cardPadding),
       decoration: BoxDecoration(
@@ -36,7 +121,7 @@ class CalorieRingCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Ring Progress - ora colorato per macronutrienti
+          // Ring Progress animato
           SizedBox(
             height: AppTheme.ringDiameter,
             width: AppTheme.ringDiameter,
@@ -52,27 +137,29 @@ class CalorieRingCard extends StatelessWidget {
                     strokeWidth: AppTheme.ringStrokeWidth,
                   ),
                 ),
-                // NUOVO: Progress Circle multi-colore basato su macro
-                TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.0, end: progress),
-                  duration: const Duration(milliseconds: 700),
-                  curve: Curves.easeOutCubic,
-                  builder: (context, value, child) {
+                
+                // Progress Circle multi-colore (ANIMATO)
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, child) {
+                    final consumed = _consumedAnimation.value;
+                    final progress = (consumed / widget.goal).clamp(0.0, 1.0);
+                    
                     return CustomPaint(
                       size: const Size(AppTheme.ringDiameter, AppTheme.ringDiameter),
                       painter: MacroCircleProgressPainter(
-                        progress: value,
+                        progress: progress,
                         strokeWidth: AppTheme.ringStrokeWidth,
-                        goal: goal, // CORRETTO: Passa goal come parametro
-                        // Calorie da ciascun macro (protein=4kcal/g, carbs=4kcal/g, fats=9kcal/g)
-                        proteinCalories: consumedProtein * 4,
-                        carbsCalories: consumedCarbs * 4,
-                        fatsCalories: consumedFats * 9,
+                        consumed: consumed,
+                        proteinCalories: _proteinAnimation.value * 4,
+                        carbsCalories: _carbsAnimation.value * 4,
+                        fatsCalories: _fatsAnimation.value * 9,
                       ),
                     );
                   },
                 ),
-                // Center Content
+                
+                // Center Content (STATICO - usa widget.consumed)
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -82,12 +169,12 @@ class CalorieRingCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      remaining.toInt().toString(),
+                      ((widget.goal - widget.consumed).clamp(0, widget.goal)).toInt().toString(),
                       style: AppTheme.ringNumberStyle,
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Obiettivo ${goal.toInt()} kcal',
+                      'Obiettivo ${widget.goal.toInt()} kcal',
                       style: AppTheme.ringLabelStyle,
                     ),
                   ],
@@ -103,7 +190,7 @@ class CalorieRingCard extends StatelessWidget {
             children: [
               _StatItem(
                 label: 'Assunte (kcal)',
-                value: consumed.toInt(),
+                value: widget.consumed.toInt(),
               ),
               Container(
                 height: 32,
@@ -112,7 +199,7 @@ class CalorieRingCard extends StatelessWidget {
               ),
               _StatItem(
                 label: 'Bruciate (kcal)',
-                value: burned.toInt(),
+                value: widget.burned.toInt(),
               ),
             ],
           ),
@@ -155,7 +242,6 @@ class _StatItem extends StatelessWidget {
   }
 }
 
-// Painter per il background
 class CircleProgressPainter extends CustomPainter {
   final double progress;
   final Color color;
@@ -194,7 +280,7 @@ class CircleProgressPainter extends CustomPainter {
 class MacroCircleProgressPainter extends CustomPainter {
   final double progress;
   final double strokeWidth;
-  final double goal;
+  final double consumed;
   final double proteinCalories;
   final double carbsCalories;
   final double fatsCalories;
@@ -202,7 +288,7 @@ class MacroCircleProgressPainter extends CustomPainter {
   MacroCircleProgressPainter({
     required this.progress,
     required this.strokeWidth,
-    required this.goal,
+    required this.consumed,
     required this.proteinCalories,
     required this.carbsCalories,
     required this.fatsCalories,
@@ -213,20 +299,17 @@ class MacroCircleProgressPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
         
-    // Se non ci sono calorie, non disegnare nulla
-    if (goal == 0) return;
+    if (consumed == 0) return;
     
-    // Calcola la percentuale di ciascun macro sul totale consumato
-    final proteinPercent = proteinCalories / goal;
-    final carbsPercent = carbsCalories / goal;
-    final fatsPercent = fatsCalories / goal;
+    final proteinPercent = proteinCalories / consumed;
+    final carbsPercent = carbsCalories / consumed;
+    final fatsPercent = fatsCalories / consumed;
 
-    // Angolo totale da disegnare (basato sul progress complessivo)
     final totalSweepAngle = 2 * math.pi * progress;
     
-    double currentAngle = -math.pi / 2; // Inizia dall'alto (ore 12)
+    double currentAngle = -math.pi / 2;
 
-    // Disegna arco CARBOIDRATI (beige)
+    // Arco CARBOIDRATI
     if (carbsPercent > 0) {
       final carbsSweep = totalSweepAngle * carbsPercent;
       final carbsPaint = Paint()
@@ -246,7 +329,7 @@ class MacroCircleProgressPainter extends CustomPainter {
       currentAngle += carbsSweep;
     }
     
-    // Disegna arco PROTEINE (arancione)
+    // Arco PROTEINE
     if (proteinPercent > 0) {
       final proteinSweep = totalSweepAngle * proteinPercent;
       final proteinPaint = Paint()
@@ -266,7 +349,7 @@ class MacroCircleProgressPainter extends CustomPainter {
       currentAngle += proteinSweep;
     }
     
-    // Disegna arco GRASSI (verde)
+    // Arco GRASSI
     if (fatsPercent > 0) {
       final fatsSweep = totalSweepAngle * fatsPercent;
       final fatsPaint = Paint()
@@ -288,7 +371,7 @@ class MacroCircleProgressPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant MacroCircleProgressPainter oldDelegate) {
     return oldDelegate.progress != progress ||
-        oldDelegate.goal != goal ||
+        oldDelegate.consumed != consumed ||
         oldDelegate.carbsCalories != carbsCalories ||
         oldDelegate.proteinCalories != proteinCalories ||
         oldDelegate.fatsCalories != fatsCalories;
