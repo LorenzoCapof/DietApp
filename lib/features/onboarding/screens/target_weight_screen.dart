@@ -37,10 +37,20 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
     if (provider.targetWeightKg != null) {
       _controller.text = provider.targetWeightKg!.toStringAsFixed(1);
     }
+    
+    // Ascolta i cambiamenti per aggiornare la stima in tempo reale
+    _controller.addListener(_updateEstimate);
+  }
+
+  void _updateEstimate() {
+    setState(() {
+      // Forza rebuild per mostrare stima aggiornata
+    });
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_updateEstimate);
     _controller.dispose();
     super.dispose();
   }
@@ -100,7 +110,7 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
                     const SizedBox(height: 20),
 
                     // Progress indicator
-                    _buildProgress(7, 8), // Ora sono 8 step totali se serve target
+                    _buildProgress(7, 8),
 
                     const SizedBox(height: 40),
 
@@ -201,74 +211,8 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
 
                     const SizedBox(height: 24),
 
-                    // Preview differenza e tempo stimato
-                    if (_controller.text.isNotEmpty)
-                      Builder(
-                        builder: (context) {
-                          final targetWeight = double.tryParse(_controller.text);
-                          if (targetWeight == null) return const SizedBox.shrink();
-
-                          final difference = (targetWeight - currentWeight).abs();
-                          int estimatedWeeks;
-                          
-                          if (goal == Goal.loseWeight) {
-                            estimatedWeeks = (difference / 0.625).ceil();
-                          } else {
-                            estimatedWeeks = (difference / 0.325).ceil();
-                          }
-
-                          final months = (estimatedWeeks / 4.33).round();
-
-                          return Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: AppTheme.accent2.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                              border: Border.all(
-                                color: AppTheme.accent2.withValues(alpha: 0.3),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    _buildMetric(
-                                      context,
-                                      icon: Icons.straighten,
-                                      label: 'Differenza',
-                                      value: '${difference.toStringAsFixed(1)} kg',
-                                    ),
-                                    Container(
-                                      height: 40,
-                                      width: 1,
-                                      color: AppTheme.accent2.withValues(alpha: 0.3),
-                                    ),
-                                    _buildMetric(
-                                      context,
-                                      icon: Icons.calendar_today,
-                                      label: 'Tempo stimato',
-                                      value: months > 0 
-                                          ? '~$months ${months == 1 ? "mese" : "mesi"}'
-                                          : '~$estimatedWeeks ${estimatedWeeks == 1 ? "settimana" : "settimane"}',
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  goal == Goal.loseWeight
-                                      ? 'Perdita sana: 0.5-0.75 kg/settimana'
-                                      : 'Aumento sano: 0.25-0.4 kg/settimana',
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: AppTheme.accent2,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                    // Preview differenza e tempo stimato in tempo reale
+                    _buildEstimatePreview(currentWeight, goal),
 
                     const Spacer(),
 
@@ -285,6 +229,84 @@ class _TargetWeightScreenState extends State<TargetWeightScreen> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildEstimatePreview(double currentWeight, Goal? goal) {
+    if (_controller.text.isEmpty) return const SizedBox.shrink();
+    
+    final targetWeight = double.tryParse(_controller.text);
+    if (targetWeight == null) return const SizedBox.shrink();
+
+    // Validazione base per mostrare preview
+    if (targetWeight < 30 || targetWeight > 300) return const SizedBox.shrink();
+    
+    // Controlla coerenza con obiettivo
+    if (goal == Goal.loseWeight && targetWeight >= currentWeight) {
+      return const SizedBox.shrink();
+    }
+    if (goal == Goal.gainWeight && targetWeight <= currentWeight) {
+      return const SizedBox.shrink();
+    }
+
+    final difference = (targetWeight - currentWeight).abs();
+    int estimatedWeeks;
+    
+    if (goal == Goal.loseWeight) {
+      estimatedWeeks = (difference / 0.625).ceil();
+    } else {
+      estimatedWeeks = (difference / 0.325).ceil();
+    }
+
+    final months = (estimatedWeeks / 4.33).round();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.accent2.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+        border: Border.all(
+          color: AppTheme.accent2.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildMetric(
+                context,
+                icon: Icons.straighten,
+                label: 'Differenza',
+                value: '${difference.toStringAsFixed(1)} kg',
+              ),
+              Container(
+                height: 40,
+                width: 1,
+                color: AppTheme.accent2.withValues(alpha: 0.3),
+              ),
+              _buildMetric(
+                context,
+                icon: Icons.calendar_today,
+                label: 'Tempo stimato',
+                value: months > 0 
+                    ? '~$months ${months == 1 ? "mese" : "mesi"}'
+                    : '~$estimatedWeeks ${estimatedWeeks == 1 ? "settimana" : "settimane"}',
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            goal == Goal.loseWeight
+                ? 'Perdita sana: 0.5-0.75 kg/settimana'
+                : 'Aumento sano: 0.25-0.4 kg/settimana',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.accent2,
+                  fontStyle: FontStyle.italic,
+                ),
+          ),
+        ],
       ),
     );
   }

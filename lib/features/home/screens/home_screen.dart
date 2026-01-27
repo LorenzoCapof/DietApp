@@ -1,6 +1,7 @@
 // lib/features/home/screens/home_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../../app/theme.dart';
@@ -11,8 +12,17 @@ import '../widgets/macro_pills_card.dart';
 import '../widgets/meal_card.dart';
 import '../widgets/tracking_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  double _dragDistance = 0.0;
+  static const double _dragThreshold = 100.0;
+  static const double _velocityThreshold = 300.0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,132 +35,160 @@ class HomeScreen extends StatelessWidget {
           }
 
           return SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                // Header
-                SliverToBoxAdapter(
-                  child: _buildHeader(context, provider),
-                ),
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              // accumula lo spostamento orizzontale
+              onHorizontalDragUpdate: (details) {
+                _dragDistance += details.delta.dx;
+              },
+              onHorizontalDragEnd: (details) {
+                final vx = details.velocity.pixelsPerSecond.dx;
 
-                // Date Navigation
-                SliverToBoxAdapter(
-                  child: _buildDateNavigation(context, provider),
-                ),
+                // swipe right (dx positivo) -> previous day
+                if (_dragDistance > _dragThreshold || vx > _velocityThreshold) {
+                  provider.goToPreviousDay();
+                  HapticFeedback.selectionClick();
+                }
+                // swipe left (dx negativo) -> next day (solo se non è oggi)
+                else if (_dragDistance < -_dragThreshold || vx < -_velocityThreshold) {
+                  if (!_isToday(provider.selectedDate)) {
+                    provider.goToNextDay();
+                    HapticFeedback.selectionClick();
+                  }
+                }
 
-                // Content
-                SliverPadding(
-                  padding: const EdgeInsets.all(AppTheme.paddingStandard),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      CalorieRingCard(
-                        consumed: provider.consumedCalories,
-                        goal: provider.calorieGoal,
-                        burned: 0,
+                // reset accumulatore
+                _dragDistance = 0.0;
+              },
+              child: CustomScrollView(
+                slivers: [
+                  // Header
+                  SliverToBoxAdapter(
+                    child: _buildHeader(context, provider),
+                  ),
 
-                        consumedProtein: provider.consumedProtein,
-                        consumedCarbs: provider.consumedCarbs,
-                        consumedFats: provider.consumedFats,
-                      ),
-                      
-                      const SizedBox(height: AppTheme.sectionGap),
-                      
-                      // Macro Pills
-                      MacroPillsCard(
-                        protein: provider.consumedProtein,
-                        proteinGoal: provider.proteinGoal,
-                        carbs: provider.consumedCarbs,
-                        carbsGoal: provider.carbsGoal,
-                        fats: provider.consumedFats,
-                        fatsGoal: provider.fatsGoal,
-                      ),
-                      
-                      const SizedBox(height: 24),
-                      
-                      // Section Title
-                      Text(
-                        'DIARIO ALIMENTARE',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          letterSpacing: 1.2,
-                          fontWeight: FontWeight.w600,
+                  // Date Navigation
+                  SliverToBoxAdapter(
+                    child: _buildDateNavigation(context, provider),
+                  ),
+
+                  // Content
+                  SliverPadding(
+                    padding: const EdgeInsets.all(AppTheme.paddingStandard),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        CalorieRingCard(
+                          consumed: provider.consumedCalories,
+                          goal: provider.calorieGoal,
+                          burned: 0,
+                          consumedProtein: provider.consumedProtein,
+                          consumedCarbs: provider.consumedCarbs,
+                          consumedFats: provider.consumedFats,
                         ),
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      // Meals
-                      MealCard(
-                        type: MealType.breakfast,
-                        meals: provider.breakfastMeals,
-                        onAdd: () => _showAddMealDialog(context, provider, MealType.breakfast),
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      MealCard(
-                        type: MealType.lunch,
-                        meals: provider.lunchMeals,
-                        onAdd: () => _showAddMealDialog(context, provider, MealType.lunch),
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      MealCard(
-                        type: MealType.dinner,
-                        meals: provider.dinnerMeals,
-                        onAdd: () => _showAddMealDialog(context, provider, MealType.dinner),
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      MealCard(
-                        type: MealType.snack,
-                        meals: provider.snackMeals,
-                        onAdd: () => _showAddMealDialog(context, provider, MealType.snack),
-                      ),
-                      
-                      const SizedBox(height: 24),
-                      
-                      // Tracking Section
-                      Text(
-                        'TRACKING GIORNALIERO',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          letterSpacing: 1.2,
-                          fontWeight: FontWeight.w600,
+
+                        const SizedBox(height: AppTheme.sectionGap),
+
+                        // Macro Pills
+                        MacroPillsCard(
+                          protein: provider.consumedProtein,
+                          proteinGoal: provider.proteinGoal,
+                          carbs: provider.consumedCarbs,
+                          carbsGoal: provider.carbsGoal,
+                          fats: provider.consumedFats,
+                          fatsGoal: provider.fatsGoal,
                         ),
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      TrackingCard(
-                        waterGlasses: provider.waterGlasses,
-                        fruitServings: provider.fruitServings,
-                        veggieServings: provider.veggieServings,
-                        onWaterIncrement: () => provider.incrementWater(),
-                        onFruitIncrement: () => provider.incrementFruit(),
-                        onVeggiesIncrement: () => provider.incrementVeggies(),
-                      ),
-                      
-                      const SizedBox(height: 20),
-                      
-                      // Debug Button
-                      if (provider.currentLog?.meals.isEmpty ?? true)
-                        Center(
-                          child: TextButton(
-                            onPressed: () => provider.loadSampleData(),
-                            child: Text(
-                              'Carica dati di esempio',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppTheme.primary,
+
+                        const SizedBox(height: 24),
+
+                        // Section Title
+                        Text(
+                          'DIARIO ALIMENTARE',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            letterSpacing: 1.2,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Meals
+                        MealCard(
+                          type: MealType.breakfast,
+                          meals: provider.breakfastMeals,
+                          onAdd: () => _showAddMealDialog(context, provider, MealType.breakfast),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        MealCard(
+                          type: MealType.lunch,
+                          meals: provider.lunchMeals,
+                          onAdd: () => _showAddMealDialog(context, provider, MealType.lunch),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        MealCard(
+                          type: MealType.dinner,
+                          meals: provider.dinnerMeals,
+                          onAdd: () => _showAddMealDialog(context, provider, MealType.dinner),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        MealCard(
+                          type: MealType.snack,
+                          meals: provider.snackMeals,
+                          onAdd: () => _showAddMealDialog(context, provider, MealType.snack),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Tracking Section
+                        Text(
+                          'TRACKING GIORNALIERO',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            letterSpacing: 1.2,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        TrackingCard(
+                          waterGlasses: provider.waterGlasses,
+                          fruitServings: provider.fruitServings,
+                          veggieServings: provider.veggieServings,
+                          onWaterIncrement: () => provider.incrementWater(),
+                          onWaterDecrement: () => provider.decrementWater(),
+                          onFruitIncrement: () => provider.incrementFruit(),
+                          onFruitDecrement: () => provider.decrementFruit(),
+                          onVeggiesIncrement: () => provider.incrementVeggies(),
+                          onVeggiesDecrement: () => provider.decrementVeggies(),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // Debug Button
+                        if (provider.currentLog?.meals.isEmpty ?? true)
+                          Center(
+                            child: TextButton(
+                              onPressed: () => provider.loadSampleData(),
+                              child: Text(
+                                'Carica dati di esempio',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: AppTheme.primary,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      
-                      const SizedBox(height: 40),
-                    ]),
+
+                        const SizedBox(height: 40),
+                      ]),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -210,9 +248,9 @@ class HomeScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // Data corrente
           GestureDetector(
             onTap: () => provider.goToToday(),
@@ -242,9 +280,9 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           SizedBox(
             width: 44,
             height: 44,
@@ -271,9 +309,9 @@ class HomeScreen extends StatelessWidget {
 
   bool _isToday(DateTime date) {
     final now = DateTime.now();
-    return date.year == now.year && 
-           date.month == now.month && 
-           date.day == now.day;
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
   }
 
   void _showAddMealDialog(BuildContext context, NutritionProvider provider, MealType type) {

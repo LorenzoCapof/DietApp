@@ -4,31 +4,32 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  //============ COLORI PRINCIPALI ============
-  static const Color primary = Color(0xFF2D5F5D);
-  static const Color secondary = Color(0xFFF4E8D8);
-  static const Color background = Color(0xFFFAFAF8);
-  static const Color surface = Color(0xFFFFFFFF);
+  // ============ COLORI PRINCIPALI ============
+  static const Color primary = Color(0xFF2D5F5D); // invariato (identità forte)
+  static const Color secondary = Color(0xFFF3E6D3); // leggermente più caldo
+  static const Color background = Color(0xFFFAFAF8); // invariato
+  static const Color surface = Color(0xFFFFFFFF); // invariato
 
-  // ============ COLORI ACCENTO ============
-  static const Color accent1 = Color(0xFFE8926F); // CTA e interattivi
-  static const Color accent2 = Color(0xFFA8C5A0); // Success
-  static const Color accent3 = Color(0xFF6B8E8E); // Secondari
+  // ============ COLORI ACCENTO (più vivi) ============
+  static const Color accent1 = Color(0xFFEE7C53); // Corallo vivo (CTA / + / highlight)
+  static const Color accent2 = Color(0xFF7FBF8E); // Verde fresco (success / positivo)
+  static const Color accent3 = Color(0xFF4F8A8B); // Teal più saturo (secondari)
 
-  // ============ MACRONUTRIENTI ============
-  static const Color carbs = Color(0xFFDEB887);
-  static const Color protein = Color(0xFFE8926F);
-  static const Color fats = Color(0xFFA8C5A0);
+  // ============ MACRONUTRIENTI (più distinti e food-like) ============
+  static const Color carbs = Color(0xFFE3B15F);   // Giallo-grano (energia)
+  static const Color protein = Color(0xFFEE7C53); // Salmone / carne
+  static const Color fats = Color(0xFF7FBF8E);    // Avocado / grassi buoni
 
   // ============ FUNZIONALI ============
-  static const Color error = Color(0xFFC76856);
-  static const Color success = Color(0xFF7BA375);
-  static const Color warning = Color(0xFFD4A574);
+  static const Color error = Color(0xFFD1604D);   // Rosso caldo più leggibile
+  static const Color success = Color(0xFF6FAF86); // Verde più vivo
+  static const Color warning = Color(0xFFE0A24E); // Ambra più luminosa
 
-  // ============ TESTI (migliorati per contrasto) ============
-  static const Color textPrimary = Color(0xFF2C3E3D);
-  static const Color textSecondary = Color(0xFF57706F); // Scurito per leggibilità
-  static const Color textDisabled = Color(0xFFB0B8B8);
+  // ============ TESTI ============
+  static const Color textPrimary = Color(0xFF243837); // leggermente più scuro
+  static const Color textSecondary = Color(0xFF4F6B6A); // più contrasto
+  static const Color textDisabled = Color(0xFFB0B8B8); // ok così
+
 
   // ============ DESIGN CONSTANTS ============
   static const double radiusCard = 24.0;

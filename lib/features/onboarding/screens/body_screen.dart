@@ -30,10 +30,22 @@ class _BodyScreenState extends State<BodyScreen> {
     if (provider.weightKg != null) {
       _weightController.text = provider.weightKg!.toStringAsFixed(1);
     }
+    
+    // Ascolta i cambiamenti per aggiornare il BMI in tempo reale
+    _heightController.addListener(_updateBMI);
+    _weightController.addListener(_updateBMI);
+  }
+
+  void _updateBMI() {
+    setState(() {
+      // Forza rebuild per mostrare BMI aggiornato
+    });
   }
 
   @override
   void dispose() {
+    _heightController.removeListener(_updateBMI);
+    _weightController.removeListener(_updateBMI);
     _heightController.dispose();
     _weightController.dispose();
     super.dispose();
@@ -176,65 +188,8 @@ class _BodyScreenState extends State<BodyScreen> {
 
                 const SizedBox(height: 24),
 
-                // BMI Preview (se entrambi i campi sono validi)
-                Consumer<OnboardingProvider>(
-                  builder: (context, provider, _) {
-                    final height = double.tryParse(_heightController.text);
-                    final weight = double.tryParse(_weightController.text);
-
-                    if (height != null && weight != null && 
-                        height >= 130 && height <= 250 && 
-                        weight >= 35 && weight <= 300) {
-                      final heightM = height / 100;
-                      final bmi = weight / (heightM * heightM);
-                      String category;
-                      Color categoryColor;
-
-                      if (bmi < 18.5) {
-                        category = 'Sottopeso';
-                        categoryColor = AppTheme.warning;
-                      } else if (bmi < 25) {
-                        category = 'Normopeso';
-                        categoryColor = AppTheme.success;
-                      } else if (bmi < 30) {
-                        category = 'Sovrappeso';
-                        categoryColor = AppTheme.warning;
-                      } else {
-                        category = 'Obesità';
-                        categoryColor = AppTheme.error;
-                      }
-
-                      return Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: categoryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
-                          border: Border.all(
-                            color: categoryColor.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.info_outline, 
-                                 size: 20, 
-                                 color: categoryColor),
-                            const SizedBox(width: 8),
-                            Text(
-                              'BMI: ${bmi.toStringAsFixed(1)} - $category',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: categoryColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    return const SizedBox.shrink();
-                  },
-                ),
+                // BMI Preview in tempo reale
+                _buildBMIPreview(),
 
                 const Spacer(),
 
@@ -251,6 +206,63 @@ class _BodyScreenState extends State<BodyScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildBMIPreview() {
+    final height = double.tryParse(_heightController.text);
+    final weight = double.tryParse(_weightController.text);
+
+    if (height != null && weight != null && 
+        height >= 130 && height <= 250 && 
+        weight >= 35 && weight <= 300) {
+      final heightM = height / 100;
+      final bmi = weight / (heightM * heightM);
+      String category;
+      Color categoryColor;
+
+      if (bmi < 18.5) {
+        category = 'Sottopeso';
+        categoryColor = AppTheme.warning;
+      } else if (bmi < 25) {
+        category = 'Normopeso';
+        categoryColor = AppTheme.success;
+      } else if (bmi < 30) {
+        category = 'Sovrappeso';
+        categoryColor = AppTheme.warning;
+      } else {
+        category = 'Obesità';
+        categoryColor = AppTheme.error;
+      }
+
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: categoryColor.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppTheme.radiusSmall),
+          border: Border.all(
+            color: categoryColor.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.info_outline, 
+                 size: 20, 
+                 color: categoryColor),
+            const SizedBox(width: 8),
+            Text(
+              'BMI: ${bmi.toStringAsFixed(1)} - $category',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: categoryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   Widget _buildProgress(int current, int total) {

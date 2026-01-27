@@ -77,7 +77,7 @@ class MealCard extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    meal.items.first.imageUrl ?? '🍽️',
+                    meal.items.first.imageUrl ?? '',
                     style: const TextStyle(fontSize: 20),
                   ),
                   const SizedBox(width: 10),
