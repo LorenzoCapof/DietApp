@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'theme.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 
 class AppShell extends StatelessWidget {
   final Widget child;
@@ -46,35 +47,50 @@ class AppShell extends StatelessWidget {
                   _buildNavItem(
                     context: context,
                     index: 0,
-                    icon: Icons.home_rounded,
+                    icon: Iconify(
+                      'lucide:home',
+                      color: currentIndex == 0 ? AppTheme.primary : AppTheme.textSecondary,
+                    ),
                     route: '/home',
                     isSelected: currentIndex == 0,
                   ),
                   _buildNavItem(
                     context: context,
                     index: 1,
-                    icon: Icons.kitchen_rounded,
+                    icon: Iconify(
+                      'lucide:refrigerator',
+                      color: currentIndex == 1 ? AppTheme.primary : AppTheme.textSecondary,
+                    ),
                     route: '/pantry',
                     isSelected: currentIndex == 1,
                   ),
                   _buildNavItem(
                     context: context,
                     index: 2,
-                    icon: Icons.auto_awesome_rounded,
+                    icon: Iconify(
+                      'lucide:chef-hat',
+                      color: currentIndex == 2 ? AppTheme.primary : AppTheme.textSecondary,
+                    ),
                     route: '/recipes',
                     isSelected: currentIndex == 2,
                   ),
                   _buildNavItem(
                     context: context,
                     index: 3,
-                    icon: Icons.insights_rounded,
+                    icon: Iconify(
+                      'lucide:bar-chart-2',
+                      color: currentIndex == 3 ? AppTheme.primary : AppTheme.textSecondary,
+                    ),
                     route: '/insights',
                     isSelected: currentIndex == 3,
                   ),
                   _buildNavItem(
                     context: context,
                     index: 4,
-                    icon: Icons.person_rounded,
+                    icon: Iconify(
+                      'lucide:user',
+                      color: currentIndex == 4 ? AppTheme.primary : AppTheme.textSecondary,
+                    ),
                     route: '/profile',
                     isSelected: currentIndex == 4,
                   ),
@@ -90,7 +106,7 @@ class AppShell extends StatelessWidget {
   Widget _buildNavItem({
     required BuildContext context,
     required int index,
-    required IconData icon,
+    required Widget icon,
     required String route,
     required bool isSelected,
   }) {
@@ -112,13 +128,7 @@ class AppShell extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                size: 24,
-                color: isSelected
-                    ? AppTheme.primary
-                    : AppTheme.textSecondary,
-              ),
+              icon,
               const SizedBox(height: 2)
             ],
           ),

@@ -15,6 +15,7 @@ dependencies:
   # UI & Theming
   cupertino_icons: ^1.0.6
   google_fonts: ^6.1.0
+  iconify_flutter: ^0.0.7
   
   # Navigation
   go_router: ^14.0.0
