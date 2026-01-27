@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import '../../../app/theme.dart';
 import '../../../providers/nutrition_provider.dart';
 import '../../../core/models/meal.dart';
@@ -115,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MealCard(
                           type: MealType.breakfast,
                           meals: provider.breakfastMeals,
-                          onAdd: () => _showAddMealDialog(context, provider, MealType.breakfast),
+                          onAdd: (type) => _navigateToAddProducts(context, provider, type),
                         ),
 
                         const SizedBox(height: 12),
@@ -123,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MealCard(
                           type: MealType.lunch,
                           meals: provider.lunchMeals,
-                          onAdd: () => _showAddMealDialog(context, provider, MealType.lunch),
+                          onAdd: (type) => _navigateToAddProducts(context, provider, type),
                         ),
 
                         const SizedBox(height: 12),
@@ -131,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MealCard(
                           type: MealType.dinner,
                           meals: provider.dinnerMeals,
-                          onAdd: () => _showAddMealDialog(context, provider, MealType.dinner),
+                          onAdd: (type) => _navigateToAddProducts(context, provider, type),
                         ),
 
                         const SizedBox(height: 12),
@@ -139,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         MealCard(
                           type: MealType.snack,
                           meals: provider.snackMeals,
-                          onAdd: () => _showAddMealDialog(context, provider, MealType.snack),
+                          onAdd: (type) => _navigateToAddProducts(context, provider, type),
                         ),
 
                         const SizedBox(height: 24),
@@ -314,13 +315,12 @@ class _HomeScreenState extends State<HomeScreen> {
         date.day == now.day;
   }
 
-  void _showAddMealDialog(BuildContext context, NutritionProvider provider, MealType type) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Aggiungi ${type.displayName} - Coming soon!'),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+  void _navigateToAddProducts(
+    BuildContext context,
+    NutritionProvider provider,
+    MealType type,
+  ) {
+    final dateStr = provider.selectedDate.toIso8601String().split('T')[0];
+    context.push('/add-meal-products/${type.name}/$dateStr');
   }
 }

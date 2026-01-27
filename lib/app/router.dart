@@ -1,5 +1,6 @@
 // lib/app/router.dart
 
+import 'package:dietapp/core/models/meal.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,9 +24,12 @@ import '../features/onboarding/screens/summary_screen.dart';
 
 // Ricette / Dispensa
 import '../features/pantry/screens/products_list_screen.dart';
-import '../features/pantry/screens/barcode_scanner_screen.dart';
+import '../shared/widgets/barcode/barcode_scanner_screen.dart';
 import '../features/recipes/screens/recipes_list_screen.dart';
 import '../features/pantry/screens/product_detail_screen.dart';
+
+// Meals
+import '../features/meals/screens/add_meal_products_screen.dart';
 
 import '../core/services/storage_service.dart';
 
@@ -143,6 +147,29 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final category = Uri.decodeComponent(state.pathParameters['category']!);
         return RecipesListScreen(category: category);
+      },
+    ),
+
+    // Route per aggiungere prodotti a un pasto
+    GoRoute(
+      path: '/add-meal-products/:mealType/:date',
+      builder: (context, state) {
+        final mealTypeStr = state.pathParameters['mealType']!;
+        final dateStr = state.pathParameters['date']!;
+        
+        // Parse MealType
+        final mealType = MealType.values.firstWhere(
+          (e) => e.name == mealTypeStr,
+          orElse: () => MealType.lunch,
+        );
+        
+        // Parse Date
+        final date = DateTime.tryParse(dateStr) ?? DateTime.now();
+        
+        return AddMealProductsScreen(
+          mealType: mealType,
+          date: date,
+        );
       },
     ),
 

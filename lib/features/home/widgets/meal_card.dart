@@ -6,7 +6,7 @@ import '../../../core/models/meal.dart';
 class MealCard extends StatelessWidget {
   final MealType type;
   final List<Meal> meals;
-  final VoidCallback onAdd;
+  final Function(MealType) onAdd;
 
   const MealCard({
     super.key,
@@ -59,7 +59,7 @@ class MealCard extends StatelessWidget {
                 width: 44,
                 height: 44,
                 child: IconButton(
-                  onPressed: onAdd,
+                  onPressed: () => onAdd(type),
                   icon: Icon(
                     hasItems ? Icons.add_circle : Icons.add_circle_outline,
                     color: AppTheme.primary,

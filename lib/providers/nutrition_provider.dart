@@ -5,6 +5,7 @@ import '../core/models/user.dart';
 import '../core/models/daily_log.dart';
 import '../core/models/meal.dart';
 import '../core/models/food_item.dart';
+import '../core/models/consumed_product.dart';
 import '../core/services/nutrition_service.dart';
 import '../core/services/storage_service.dart';
 
@@ -207,6 +208,39 @@ class NutritionProvider with ChangeNotifier {
   Future<void> decrementVeggies() async {
     if (veggieServings > 0) {
       await updateVeggies(veggieServings - 1);
+    }
+  }
+
+  // ============ PRODUCT TO MEAL OPERATIONS ============
+
+  /// Converte un ConsumedProduct in FoodItem per aggiungere al pasto
+  FoodItem _consumedProductToFoodItem(ConsumedProduct consumedProduct) {
+    return FoodItem(
+      id: consumedProduct.id,
+      name: '${consumedProduct.product.name} (${consumedProduct.displayQuantity})',
+      nutrition: consumedProduct.totalNutrition,
+      servingSize: consumedProduct.quantity,
+      imageUrl: consumedProduct.product.imageUrl,
+    );
+  }
+
+  /// Aggiunge una lista di prodotti consumati a un pasto
+  /// Converte automaticamente ConsumedProduct -> FoodItem
+  Future<void> addProductsToMeal(
+    MealType type,
+    List<ConsumedProduct> products,
+  ) async {
+    if (products.isEmpty) return;
+
+    try {
+      // Converti tutti i prodotti in FoodItem
+      final foodItems = products.map(_consumedProductToFoodItem).toList();
+      
+      // Usa il metodo esistente per aggiungere il pasto
+      await addMeal(type, foodItems);
+    } catch (e) {
+      debugPrint('Error adding products to meal: $e');
+      rethrow;
     }
   }
 

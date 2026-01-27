@@ -4,7 +4,7 @@ import '../../../app/theme.dart';
 import '../../../core/models/product.dart';
 import '../widgets/product_card.dart';
 import '../widgets/product_category_section.dart';
-import '../widgets/barcode_scanner_button.dart';
+import '../../../shared/widgets/barcode/barcode_scanner_button.dart';
 
 class PantryScreen extends StatefulWidget {
   const PantryScreen({super.key});

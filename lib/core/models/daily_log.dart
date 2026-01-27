@@ -1,10 +1,13 @@
+// lib/core/models/daily_log.dart
+
 import 'package:dietapp/core/models/meal.dart';
 import 'package:dietapp/core/models/nutrition.dart';
 
+/// Tracking giornaliero (acqua, frutta, verdura)
 class DailyTracking {
-  final int waterGlasses; // numero di bicchieri
-  final int fruitServings; // porzioni
-  final int veggieServings; // porzioni
+  final int waterGlasses;
+  final int fruitServings;
+  final int veggieServings;
 
   DailyTracking({
     this.waterGlasses = 0,
@@ -25,6 +28,7 @@ class DailyTracking {
   );
 }
 
+/// Log giornaliero completo con pasti e tracking
 class DailyLog {
   final String id;
   final DateTime date;
@@ -38,13 +42,16 @@ class DailyLog {
     required this.tracking,
   });
 
+  /// Nutrizione totale del giorno (somma di tutti i pasti)
   NutritionInfo get totalNutrition => meals.fold(
     NutritionInfo.zero(),
     (sum, meal) => sum + meal.totalNutrition,
   );
 
-  List<Meal> mealsOfType(MealType type) =>
-      meals.where((m) => m.type == type).toList();
+  /// Ottiene tutti i pasti di un tipo specifico
+  List<Meal> mealsOfType(MealType type) {
+    return meals.where((meal) => meal.type == type).toList();
+  }
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -60,15 +67,18 @@ class DailyLog {
     tracking: DailyTracking.fromJson(json['tracking']),
   );
 
+  /// CopyWith per aggiornamenti immutabili
   DailyLog copyWith({
     String? id,
     DateTime? date,
     List<Meal>? meals,
     DailyTracking? tracking,
-  }) => DailyLog(
-    id: id ?? this.id,
-    date: date ?? this.date,
-    meals: meals ?? this.meals,
-    tracking: tracking ?? this.tracking,
-  );
+  }) {
+    return DailyLog(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      meals: meals ?? this.meals,
+      tracking: tracking ?? this.tracking,
+    );
+  }
 }
