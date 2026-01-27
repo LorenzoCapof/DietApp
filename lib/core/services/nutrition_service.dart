@@ -1,5 +1,6 @@
 // lib/core/services/nutrition_service.dart
 
+import 'package:dietapp/core/models/enums/diet_type.dart';
 import 'package:uuid/uuid.dart';
 import '../models/user.dart';
 import '../models/nutrition.dart';
@@ -39,7 +40,7 @@ class NutritionService {
     required double weightKg,
     double? targetWeightKg,
     required ActivityLevel activityLevel,
-    required Goal goal,
+    required Goal goal, required DietType dietPreference,
   }) async {
     final user = User(
       id: _uuid.v4(),
@@ -51,6 +52,7 @@ class NutritionService {
       targetWeightKg: targetWeightKg,
       activityLevel: activityLevel,
       goal: goal,
+      dietPreference: dietPreference,
     );
 
     await _storage.saveUser(user);

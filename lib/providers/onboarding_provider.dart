@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../core/models/enums/gender.dart';
 import '../core/models/enums/activity_level.dart';
 import '../core/models/enums/goal.dart';
+import '../core/models/enums/diet_type.dart';
 import '../core/services/nutrition_service.dart';
 import '../core/services/storage_service.dart';
 
@@ -21,6 +22,7 @@ class OnboardingProvider with ChangeNotifier {
   double? _targetWeightKg;
   ActivityLevel? _activityLevel;
   Goal? _goal;
+  DietType? _dietPreference;
 
   bool _isCompleting = false;
 
@@ -37,6 +39,7 @@ class OnboardingProvider with ChangeNotifier {
   double? get targetWeightKg => _targetWeightKg;
   ActivityLevel? get activityLevel => _activityLevel;
   Goal? get goal => _goal;
+  DietType? get dietPreference => _dietPreference;
   bool get isCompleting => _isCompleting;
 
   /// Età calcolata dalla data di nascita
@@ -62,7 +65,8 @@ class OnboardingProvider with ChangeNotifier {
         _heightCm != null &&
         _weightKg != null &&
         _activityLevel != null &&
-        _goal != null;
+        _goal != null &&
+        _dietPreference != null;
 
     // Se l'obiettivo è lose/gain weight, serve anche targetWeightKg
     if (_goal == Goal.loseWeight || _goal == Goal.gainWeight) {
@@ -237,6 +241,11 @@ class OnboardingProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setDietPreference(DietType diet) {
+    _dietPreference = diet;
+    notifyListeners();
+  }
+
   // ============ VALIDAZIONE ============
 
   /// Valida che il peso obiettivo sia coerente con l'obiettivo
@@ -278,6 +287,7 @@ class OnboardingProvider with ChangeNotifier {
         targetWeightKg: _targetWeightKg,
         activityLevel: _activityLevel!,
         goal: _goal!,
+        dietPreference: dietPreference!,
       );
 
       debugPrint('Onboarding completato - utente salvato');
@@ -301,6 +311,7 @@ class OnboardingProvider with ChangeNotifier {
     _targetWeightKg = null;
     _activityLevel = null;
     _goal = null;
+    _dietPreference = null;
     _isCompleting = false;
     notifyListeners();
   }

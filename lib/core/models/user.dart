@@ -4,6 +4,7 @@ import 'package:dietapp/core/models/nutrition.dart';
 import 'enums/gender.dart';
 import 'enums/activity_level.dart';
 import 'enums/goal.dart';
+import 'enums/diet_type.dart';
 
 /// Modello utente con dati antropometrici e nutrizionali
 class User {
@@ -16,6 +17,7 @@ class User {
   final double heightCm; // centimetri
   final double weightKg; // kilogrammi
   final double? targetWeightKg; // Peso obiettivo (nullable - solo per lose/gain)
+  final DietType dietPreference;
 
   // Stile di vita e obiettivi
   final ActivityLevel activityLevel;
@@ -31,6 +33,7 @@ class User {
     this.targetWeightKg,
     required this.activityLevel,
     required this.goal,
+    this.dietPreference = DietType.noDiet,
   });
 
   // ============ VALORI CALCOLATI ============
@@ -197,6 +200,7 @@ class User {
         'targetWeightKg': targetWeightKg,
         'activityLevel': activityLevel.toJson(),
         'goal': goal.toJson(),
+        'dietPreference': dietPreference.toJson(),
       };
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -209,6 +213,9 @@ class User {
         targetWeightKg: json['targetWeightKg'],
         activityLevel: ActivityLevel.fromJson(json['activityLevel']),
         goal: Goal.fromJson(json['goal']),
+        dietPreference: json['dietPreference'] != null 
+            ? DietType.fromJson(json['dietPreference'])
+            : DietType.noDiet,
       );
 
   // ============ COPY WITH ============
@@ -223,6 +230,7 @@ class User {
     double? targetWeightKg,
     ActivityLevel? activityLevel,
     Goal? goal,
+    DietType? dietPreference,
   }) {
     return User(
       id: id ?? this.id,
@@ -234,6 +242,7 @@ class User {
       targetWeightKg: targetWeightKg ?? this.targetWeightKg,
       activityLevel: activityLevel ?? this.activityLevel,
       goal: goal ?? this.goal,
+      dietPreference: dietPreference ?? this.dietPreference,
     );
   }
 }
